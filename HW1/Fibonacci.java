@@ -59,7 +59,9 @@ public class Fibonacci {
      * @return returns the nth sequence
      */
     public int fibonacciRecursive (int n) {
-        if (n <= 1) // base case
+        if (n == 0)
+            return 0;
+        else if (n == 1) // base case
             return 1;
         return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
     }
@@ -82,7 +84,7 @@ public class Fibonacci {
             else
                 front = half + 1;
         }
-        return -1 * front; // return an index appropriate for insertion; - to indicate no value found
+        return -1 * (back + 1); // return an index appropriate for insertion; - to indicate no value found
     }
     /**
      * add a number to the list (allow to add duplicates)
@@ -91,10 +93,11 @@ public class Fibonacci {
     public void add(int item) {
         int index = Math.abs(indexFinder(item)); // appropriate index for the new item
         // enough room in the array for new items
-        if (size <= numIndex) {
-            while (index < size) {
-                fibArray[index] = fibArray[index + 1];
+        if (size + 1 <= numIndex) {
+            for (int i = index; i < size; i++) {
+                fibArray[i + 1] = fibArray[i];
             }
+            fibArray[index] = item;
         }
         // not enough room in the array; create an array that is big enough
         else {
@@ -102,7 +105,7 @@ public class Fibonacci {
             for (int i = 0; i < index; i++)
                 temp[i] = fibArray[i];
             temp[index] = item;
-            for (int i = index + 1; i < size) {
+            for (int i = index + 1; i < size; i++) {
                 temp[i] = fibArray[i + 1];
             fibArray = temp;
             }
@@ -119,6 +122,7 @@ public class Fibonacci {
         if (index >= 0) {
             while (index < size - 1) {
                 fibArray[index] = fibArray[index + 1];
+                index++;
             }
             size--;
         }

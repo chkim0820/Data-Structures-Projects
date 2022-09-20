@@ -13,26 +13,29 @@ public class FibonacciTest{
     /**
      * test method for fibonacciIterative() in Fibonacci class
      */
+    @Test
     public void testFibonacciIterative() {
         assertEquals("iterative input 0", fib.fibonacciIterative(0), 0);
         assertEquals("iterative input 1", fib.fibonacciIterative(1), 1);
         assertEquals("iterative input 2", fib.fibonacciIterative(2), 1);
-        assertEquals("iterative input 8", fib.fibonacciIterative(8), 13);
+        assertEquals("iterative input 8", fib.fibonacciIterative(8), 21);
     }
 
     /**
      * test method for fibonacciRecursive() in Fibonacci class
      */
+    @Test
     public void testFibonacciRecursive() {
         assertEquals("iterative input 0", fib.fibonacciRecursive(0), 0);
         assertEquals("iterative input 1", fib.fibonacciRecursive(1), 1);
         assertEquals("iterative input 2", fib.fibonacciRecursive(2), 1);
-        assertEquals("iterative input 8", fib.fibonacciRecursive(8), 13);
+        assertEquals("iterative input 8", fib.fibonacciRecursive(8), 21);
     }
 
     /**
      * test method for add() in Fibonacci class
      */
+    @Test
     public void testAdd() {
         for (int i = 0; i < 10; i++) { // adds 10 fibonacci numbers to the array
             fib.add(fib.fibonacciIterative(i));
@@ -53,13 +56,14 @@ public class FibonacciTest{
         fib.add(4);
         fib.add(35);
         assertEquals("add input -1", fib.lookup(0), -1);
-        assertEquals("add input 4", fib.lookup(7), 4);
+        assertEquals("add input 4", fib.lookup(6), 4);
         assertEquals("add input 35", fib.lookup(13), 35);
     }
 
     /**
      * test method for remove() in Fibonacci class
      */
+    @Test
     public void testRemove() {
         fib.remove(-1); // removing the random numbers added to the array in the previous method
         fib.remove(4);
@@ -73,6 +77,7 @@ public class FibonacciTest{
     /**
      * test method for ifContains() in Fibonacci class
      */
+    @Test
     public void testIfContains() {
         assertEquals("ifContains(0) returns false", fib.ifContains(0), true);
         assertEquals("ifContains(5) returns false", fib.ifContains(5), true);
@@ -82,6 +87,10 @@ public class FibonacciTest{
         assertEquals("ifContains(14) returns true", fib.ifContains(14), false);
     }
 
+    /**
+     * test method for grab() in Fibonacci class
+     */
+    @Test
     public void testGrab() {
         assertEquals(fib.ifContains(fib.grab()), true);
         assertEquals(fib.ifContains(fib.grab()), true);
@@ -91,6 +100,10 @@ public class FibonacciTest{
         // testing multiple times to ensure the method really works
     }
 
+    /**
+     * test method for numItems() in Fibonacci class
+     */
+    @Test
     public void testNumItems() {
         assertEquals("numItems() for 10 items", fib.numItems(), 10);
 
@@ -115,6 +128,7 @@ public class FibonacciTest{
     /**
      * test the main method in Fibonacci class
      */
+    @Test
     public void testMainMethod() {
 
     }
