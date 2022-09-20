@@ -22,19 +22,14 @@ public class Fibonacci {
      * @return returns the nth sequence
      */
     public int fibonacciIterative(int n) {
-        int first = 1;
-        int second = 2;
-        int sequence = 0;
-        for (int i = 0; i < n; i++) {
-            if (n == first) {
-                sequence = n;
-                i = n + 1;
-            }
+        int first = 0;
+        int second = 1;
+        for (int i = 0; i < n - 2 ; i++) {
             int temp = first;
             first = second;
-            second = temp + first;
+            second = second + temp;
         }
-        return sequence;
+        return second;
     }
 
     /**
@@ -44,8 +39,8 @@ public class Fibonacci {
      */
     public int fibonacciRecursive(int n) {
         if (n == 1) // base case
-            return;
-        fibonacciRecursive(n);
+            return fibonacciRecursive(n) + fibonacciRecursive(n - 1);
+        //
     }
 
     /**
