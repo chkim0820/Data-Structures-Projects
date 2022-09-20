@@ -19,11 +19,20 @@ public class Fibonacci {
     }
 
     /**
+     * A constructor for the Fibonacci class that doesn't get an input
+     */
+    public void fibonacci() {
+        numIndex = 0;
+        fibArray = new int[0];
+        size = 0;
+    }
+
+    /**
      * a method that prints out the nth Fibonacci sequence starting from 0, 1, using an iterative method
      * @param n specifies the nth sequence
      * @return returns the nth sequence
      */
-    public static int fibonacciIterative(int n) {
+    public int fibonacciIterative(int n) {
         int first = 1;
         int second = 2;
         if (n == 0)
@@ -44,7 +53,7 @@ public class Fibonacci {
      * @param n specifies the nth sequence
      * @return returns the nth sequence
      */
-    public static int fibonacciRecursive (int n) {
+    public int fibonacciRecursive (int n) {
         if (n <= 1)
             return 1;
         return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
@@ -132,9 +141,10 @@ public class Fibonacci {
      * @param args the sequence of Fibonacci number being searched
      */
     public static void main(String[] args) {
+        Fibonacci subject = new Fibonacci();
         for (int i = 0; args[i] != null; i++) {
             int index = Integer.parseInt(args[i]);
-            System.out.println(fibonacciIterative(index));
+            System.out.println(subject.fibonacciIterative(index));
         }
     }
 }
