@@ -168,9 +168,12 @@ public class Fibonacci {
      * @param args the sequence of Fibonacci number being searched
      */
     public static void main(String[] args) {
-        for (int i = 0; args[i] != null; i++) {
-            int index = Integer.parseInt(args[i]);
-            subject.add(index);
+        Fibonacci subject = new Fibonacci();
+        for (String s : args) {
+            subject.add(subject.fibonacciIterative(Integer.parseInt(s)));
+        }
+        for (int i = 0; i < subject.size; i++) {
+            System.out.print(subject.lookup(i));
         }
     }
 }

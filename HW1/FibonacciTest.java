@@ -152,15 +152,4 @@ public class FibonacciTest{
         fib3.add(100);
         assertEquals("numItems() after adding a new value", fib3.numItems(), 11);
     }
-
-    /**
-     * test the main method in Fibonacci class
-     */
-    @Test
-    public void testMainMethod() {
-        String[] testArray = new String[10];
-        for (int i = 0; i < 5; i++) {
-            testArray[i] = "" + i + ""
-        }
-    }
 }
