@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
  * JUnit test class for Fibonacci class
  * @author Chaehyeon Kim cxk445
  */
-public class FibonacciTest{
+public class FibonacciTest{ 
     
     /** an object of Fibnacci class for testing */
     Fibonacci fib = new Fibonacci();
@@ -33,6 +33,21 @@ public class FibonacciTest{
     }
 
     /**
+     * Test method for indexFinder() method of Fibonacci class
+     */
+    @Test
+    public void testIndexFinder() {
+        for (int i = 0; i < 10; i++) {
+            fib.add(i);
+        }
+        
+        assertEquals(fib.indexFinder(0), 0);
+        assertEquals(fib.indexFinder(1), 1);
+        assertEquals(fib.indexFinder(5), 5);
+        assertEquals(fib.indexFinder(9), 9);
+    }
+
+    /**
      * test method for add() in Fibonacci class
      */
     @Test
@@ -57,28 +72,42 @@ public class FibonacciTest{
         fib.add(35);
         assertEquals("add input -1", fib.lookup(0), -1);
         assertEquals("add input 4", fib.lookup(6), 4);
-        assertEquals("add input 35", fib.lookup(13), 35);
+        assertEquals("add input 35", fib.lookup(12), 35);
     }
+
+    Fibonacci fib2 = new Fibonacci();
 
     /**
      * test method for remove() in Fibonacci class
      */
     @Test
     public void testRemove() {
-        fib.remove(-1); // removing the random numbers added to the array in the previous method
-        fib.remove(4);
-        fib.remove(35);
+        for (int i = 0; i < 5; i++)
+            fib2.add(i);
 
-        assertEquals("remove input -1", fib.ifContains(-1), false);
-        assertEquals("remove input 4", fib.ifContains(4), false);
-        assertEquals("remove input 35", fib.ifContains(35), false);
-    }
+        assertEquals(fib2.lookup(0), 0);
+        assertEquals(fib2.lookup(1), 1);
+        assertEquals(fib2.lookup(2), 2);
+        assertEquals(fib2.lookup(3), 3);
+        assertEquals(fib2.lookup(4), 4);
+
+        fib2.remove(0);
+        assertEquals("remove input 0", fib2.ifContains(0), false);
+        fib2.remove(2);
+        assertEquals("remove input 2", fib2.ifContains(2), false);
+        fib2.remove(4);
+        assertEquals("remove input 4", fib2.ifContains(4), false);
+        assertEquals(fib2.ifContains(1), true); // undeleted item
+   }
 
     /**
      * test method for ifContains() in Fibonacci class
      */
     @Test
     public void testIfContains() {
+        for (int i = 0; i < 10; i++) { // adds 10 fibonacci numbers to the array
+            fib.add(fib.fibonacciIterative(i));
+        }
         assertEquals("ifContains(0) returns false", fib.ifContains(0), true);
         assertEquals("ifContains(5) returns false", fib.ifContains(5), true);
         assertEquals("ifContains(34) returns false", fib.ifContains(34), true);
@@ -105,24 +134,23 @@ public class FibonacciTest{
      */
     @Test
     public void testNumItems() {
-        assertEquals("numItems() for 10 items", fib.numItems(), 10);
+        Fibonacci fib3 = new Fibonacci();
 
-        Fibonacci fib2 = new Fibonacci(); // emtpy Fibonacci object
-        assertEquals("numItems() for an empty array",fib.numItems(), 0);
+        assertEquals("numItems() for an empty array",fib3.numItems(), 0);
 
-        fib2.add(1); // one item
-        assertEquals("numItems() for an array with one item", fib.numItems(), 1);
+        for (int i = 0; i < 10; i++) { // adds 10 fibonacci numbers to the array
+            fib3.add(i);
+        }
+        assertEquals("numItems() for 10 items", fib3.numItems(), 10);
 
-        fib2.add(1); // many duplicates; still one item
-        fib2.add(1);
-        fib2.add(1);
-        assertEquals("numItems() for an array with duplicates", fib.numItems(), 1);
+        
+        fib3.add(1); // many duplicates; still ten unique item
+        fib3.add(1);
+        fib3.add(1);
+        assertEquals("numItems() for an array with duplicates", fib3.numItems(), 10);
 
-        fib2.add(2); // two items
-        assertEquals("numItems() with two distinct items", fib.numItems(), 2);
-
-        fib2.add(1); // two items; it's a duplicate
-        assertEquals("numItems() adding another duplicate", fib.numItems(), 2);
+        fib3.add(100);
+        assertEquals("numItems() after adding a new value", fib3.numItems(), 11);
     }
 
     /**
@@ -130,6 +158,9 @@ public class FibonacciTest{
      */
     @Test
     public void testMainMethod() {
-
+        String[] testArray = new String[10];
+        for (int i = 0; i < 5; i++) {
+            testArray[i] = "" + i + ""
+        }
     }
 }

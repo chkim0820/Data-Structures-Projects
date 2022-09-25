@@ -13,15 +13,6 @@ public class Fibonacci {
     private int numIndex;
 
     /**
-     * A constructor for the Fibonacci class that initializes the array with an appropriate number
-     */
-    public Fibonacci(int num) {
-        numIndex = num + 10; // number of index for the array (10 more for safety)
-        fibArray = new int[numIndex]; // initializing the array at a size 10 bigger than given
-        size = 0;
-    }
-
-    /**
      * A constructor for the Fibonacci class that doesn't get an input
      */
     public Fibonacci() {
@@ -45,7 +36,7 @@ public class Fibonacci {
             return 1;
         // going through Fibonacci sequence to find the appropriate number
         for (int i = 0; i < n - 3 ; i++) {
-            int temp = first;
+            int temp = first; // saves value before being replaced
             first = second;
             second = second + temp;
         }
@@ -78,7 +69,7 @@ public class Fibonacci {
         while (front <= back) {
             int half = (back + front) / 2;
             if (fibArray[half] == num)
-                return num;
+                return half; // returns the index if matched
             else if (fibArray[half] > num)
                 back = half - 1;
             else
@@ -90,27 +81,19 @@ public class Fibonacci {
      * add a number to the list (allow to add duplicates)
      * @param item an item to be added to the list
      */
-    public void add(int item) {
+    public void add(int item) throws NullPointerException{
         int index = Math.abs(indexFinder(item)); // appropriate index for the new item
         // enough room in the array for new items
         if (size + 1 <= numIndex) {
-            for (int i = index; i < size; i++) {
-                fibArray[i + 1] = fibArray[i];
+            for (int i = size; i > index; i--) { // move surrounding values
+                fibArray[i] = fibArray[i - 1];
             }
             fibArray[index] = item;
+            size++;
         }
-        // not enough room in the array; create an array that is big enough
-        else {
-            int[] temp = new int[numIndex + 1];
-            for (int i = 0; i < index; i++)
-                temp[i] = fibArray[i];
-            temp[index] = item;
-            for (int i = index + 1; i < size; i++) {
-                temp[i] = fibArray[i + 1];
-            fibArray = temp;
-            }
-        }
-        size++;
+        // not enough room in the array; return an exception
+        else 
+            throw new NullPointerException();
     }
 
     /**
@@ -118,12 +101,13 @@ public class Fibonacci {
      * @param item an item to be removed from the list
      */
     public void remove(int item) {
-        int index = indexFinder(item); // appropriate index for the item we're looking for
-        if (index >= 0) {
-            while (index < size - 1) {
+        if (ifContains(item)) {
+            int index = indexFinder(item); // appropriate index for the item we're looking for
+            while (index < size - 1) { // move the surrounding values around
                 fibArray[index] = fibArray[index + 1];
                 index++;
             }
+            fibArray[size - 1] = 0;
             size--;
         }
     }
@@ -132,8 +116,15 @@ public class Fibonacci {
      * check if the item exists in the list
      */
     public boolean ifContains(int item) {
-        if (indexFinder(item) >= 0)
+        int index = indexFinder(item); // index of the item we're looking for
+        if (index > 0)
             return true;
+        else if (index == 0) {
+            if (fibArray[0] == item)
+                return true;
+            else 
+                return false;
+        }
         else return false;
     }
 
@@ -142,7 +133,7 @@ public class Fibonacci {
      * @return a random number from the list
      */
     public int grab() {
-        return indexFinder ((int)((Math.random()) * size));
+        return indexFinder ((int)((Math.random()) * size)); // Math.random() used to generate a random #
     }
 
     /**
@@ -151,9 +142,14 @@ public class Fibonacci {
     public int numItems() {
         int noDupl = 0; // number of non-duplicative items in the array
         int last = fibArray[0]; // last array checked
-        for (int i = 0; i < size; i++, last = fibArray[i]) {
-            if (last != fibArray[i])
-                noDupl++;
+        if (size > 0) {
+            noDupl++;
+            for (int i = 1; i < size; i++) {
+                if (last != fibArray[i]) {
+                    noDupl++;
+                    last = fibArray[i];
+                }
+            }
         }
         return noDupl;
     }
@@ -172,7 +168,6 @@ public class Fibonacci {
      * @param args the sequence of Fibonacci number being searched
      */
     public static void main(String[] args) {
-        Fibonacci subject = new Fibonacci();
         for (int i = 0; args[i] != null; i++) {
             int index = Integer.parseInt(args[i]);
             subject.add(index);
