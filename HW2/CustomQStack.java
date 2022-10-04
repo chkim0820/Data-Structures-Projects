@@ -1,3 +1,4 @@
+import java.util.EmptyStackException;
 import java.util.Queue;
 /**
  * A CustomQStack class for CSDS 233 HW 2
@@ -32,15 +33,23 @@ public class CustomQStack {
      * Removes the object at the top of this stack and returns that object as the value of this function
      * @return the value that is returned
      */
-    public int pop() {
-
+    public int pop() throws EmptyStackException{
+        if (size == 0)
+            throw new EmptyStackException();
+        for (int i = 1; i < size; i++) {
+            queue.add(queue.remove());
+        }
+        size--;
+        return queue.remove(); // int vs. Integer? check if conversion necessary
     }
 
     /**
      * Pushes an item onto the top of this stack
      * @return the item that is pushed onto the top of this stack
      */
-    public int push() {
-
+    public int push(int e) {
+        queue.add(new Integer(e));
+        size++;
+        return e;
     }
 }

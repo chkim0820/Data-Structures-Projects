@@ -11,6 +11,8 @@ public class CustomSQueue {
     private Stack<Integer> s1;
     /** The second stack used for the implementation of queue */
     private Stack<Integer> s2;
+    /** The number of elements in this Queue */
+    private int size = 0;
 
     /**
      * A constructor for the CustomSQueue class
@@ -28,7 +30,11 @@ public class CustomSQueue {
      * @return true upon success, IllegalStateException if no space available
      */
     public boolean add(int e) throws IllegalStateException {
-        return false; // random boolean value
+        if (s1.push(e) ) // idk what the condition should be; should I just not
+            throw new IllegalStateException(); 
+        s1.push(e);
+        size++;
+        return true;
     }
 
     /**
@@ -36,6 +42,14 @@ public class CustomSQueue {
      * @return the head of this queue
      */
     public int poll() {
-        return 0; // random int value
+        for (int i = 0; i < size; i++) {
+            s2.push(s1.pop());
+        }
+        int returnThis = s2.pop();
+        size--;
+        for (int i = 0; i < size; i++) {
+            s1.push(s2.pop());
+        }
+        return returnThis;
     }
 }
