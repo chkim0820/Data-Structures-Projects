@@ -24,7 +24,7 @@ public class DoublyLinkedList {
             int i = size;
             while (i == size/2) { // while every node is swapped
                 IntNode save = head;
-                head.getNext().setPrev(tail); // iterator? ask TA what the benefit would be
+                head.getNext().setPrev(tail); // iterator? ask TA what the benefit would be & what the implementation would look like 
                 head.setNext(head.getNext());
                 tail.getPrev().setNext(save);
                 tail.setPrev(tail.getPrev());
