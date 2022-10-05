@@ -7,8 +7,45 @@ import javax.xml.bind.TypeConstraintException;
 
 public class DoublyLinkedList {
 
+    /** The head node of the list */
     private IntNode head;
+    /** The tail node of the list */
     private IntNode tail;
+    /** The size of the list (number of nodes) */
+    private int size = 0;
+
+    /**
+     * A constructor for the DoublyLinkedList class
+     */
+    public DoublyLinkedList() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    protected IntNode getFirstNode() {
+        return head;
+    }
+
+    protected IntNode getLastNode() {
+        return tail;
+    }
+
+    /**
+     * Appends the specified element to the end of this list
+     * @param element the specified element to be added at the end of the list
+     */
+    public void add(int element) {
+        if (size == 0) {
+            head = new IntNode(element);
+            tail = head;
+        }
+        else {
+            IntNode newNode = new IntNode(element);
+            tail.setNext(newNode);
+            tail = newNode;
+        }
+        size++;
+    }
 
     /**
     * A method that is invoked on a list object and reverse the list using no additional lists
@@ -53,6 +90,18 @@ public class DoublyLinkedList {
         public Iterator() {
             nextNode = head;
             prevNode = tail;
+        }
+
+        public Iterator (IntNode head, IntNode tail) {
+            nextNode = head;
+            prevNode = tail;
+        }
+
+        /**
+         * Creates a new Iterator for the instance
+         */
+        public Iterator iterator() {
+            return new Iterator(getFirstNode(), getLastNode());
         }
 
         /**
