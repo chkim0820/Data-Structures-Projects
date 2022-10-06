@@ -30,7 +30,7 @@ public class CustomSQueue {
      * @return true upon success, IllegalStateException if no space available
      */
     public boolean add(int e) throws IllegalStateException {
-        if (s1.push(e) ) // idk what the condition should be; should I just not
+        if (s1.push(e) != e) // idk what the condition should be; should I just not
             throw new IllegalStateException(); 
         s1.push(e);
         size++;

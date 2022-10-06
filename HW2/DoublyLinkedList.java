@@ -22,12 +22,19 @@ public class DoublyLinkedList {
         this.tail = null;
     }
 
-    protected IntNode getFirstNode() {
+    protected IntNode getHead() {
         return head;
     }
 
-    protected IntNode getLastNode() {
+    protected IntNode getTail() {
         return tail;
+    }
+
+    /**
+     * Creates a new Iterator for the instance
+    */
+    public Iterator iterator() {
+        return new Iterator();
     }
 
     /**
@@ -50,28 +57,26 @@ public class DoublyLinkedList {
     /**
     * A method that is invoked on a list object and reverse the list using no additional lists
     */
-    public void reverse() { // check if working with my own node class is okay
-        if (head instanceof IntNode) {
-            Iterator iter = new Iterator();
-            int size = 0;
-            while (iter.hasNext()) {
-                iter.next();
-                size++; // calculates the number of nodes in the list
-            }
-            int i = size;
-            while (i == size/2) { // while every node is swapped
-                IntNode save = head;
-                head.getNext().setPrev(tail); // iterator? ask TA what the benefit would be & what the implementation would look like 
-                head.setNext(head.getNext());
-                tail.getPrev().setNext(save);
-                tail.setPrev(tail.getPrev());
-                head = head.getNext();
-                tail = tail.getNext();
-            }
+    public void reverse() throws NullPointerException{ // check if working with my own node class is okay
+        if (head == null)
+            throw new NullPointerException();
+        else if (size > 1) {
+            IntNode headTrav = head;
+            IntNode tailTrav = tail;
+            for (int i = 0; i < size/2; i++) { // while every node is swapped
+                IntNode saveFront = headTrav.getNext();
+                IntNode saveBack = tailTrav.getPrev();
+                headTrav.setNext(tailTrav.getNext());
+                tailTrav.setPrev(headTrav.getPrev());
+                headTrav.setPrev(tailTrav.getPrev());
+                tailTrav.setNext(headTrav.getNext());
+                headTrav.getNext().setPrev(saveBack); // iterator? ask TA what the benefit would be & what the implementation would look like 
+                tailTrav.getPrev().setNext(saveFront);
 
+
+            headTrav = headTrav.getNext();
+            tailTrav = tailTrav.getPrev();
         }
-        else
-            throw new TypeConstraintException("The reverse() function can only operate on a node");
     }
 
     /**
@@ -90,18 +95,6 @@ public class DoublyLinkedList {
         public Iterator() {
             nextNode = head;
             prevNode = tail;
-        }
-
-        public Iterator (IntNode head, IntNode tail) {
-            nextNode = head;
-            prevNode = tail;
-        }
-
-        /**
-         * Creates a new Iterator for the instance
-         */
-        public Iterator iterator() {
-            return new Iterator(getFirstNode(), getLastNode());
         }
 
         /**
