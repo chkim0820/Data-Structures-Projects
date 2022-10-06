@@ -1,6 +1,7 @@
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
+import java.util.EmptyStackException;
 import java.util.Iterator;
 
 /**
@@ -50,7 +51,7 @@ public class HW2TestingClass {
      */
     @Test
     public void testNext() {
-        DoublyLinkedList.Iterator it = list.iterator();
+        Iterator it = list.iterator();
         assertEquals(it.next(), 9);
         assertEquals(it.next(), 8);
         assertEquals(it.next(), 7);
@@ -63,7 +64,7 @@ public class HW2TestingClass {
      */
     @Test
     public void testHasNext() {
-        DoublyLinkedList.Iterator it = list.iterator();
+        Iterator it = list.iterator();
         assertEquals(it.hasNext(), true);
         DoublyLinkedList list2 = new DoublyLinkedList();
         DoublyLinkedList.Iterator it2 = list2.iterator();
@@ -131,7 +132,7 @@ public class HW2TestingClass {
         try {
             s1.pop();
         }
-        catch (empty e1) {
+        catch (EmptyStackException e1) {
             // exception thrown correctly
         }
     }
@@ -141,7 +142,7 @@ public class HW2TestingClass {
      */
     @Test
     public void testPush() {
-        CustomQStack s1 = new CustomQStack();
+        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
         assertEquals(s1.push(1), 1);
         assertEquals(s1.push(2), 2);
         assertEquals(s1.push(3), 3);
@@ -154,14 +155,20 @@ public class HW2TestingClass {
      */
     @Test
     public void testSQueueAdd() {
-
+        CustomSQueue q1 = new CustomSQueue(new Stack<Integer>(), new Stack<Integer());
+        assertEquals(q1.add(1), true);
+        assertEquals(q1.add(2), true);
+        assertEquals(q1.add(3), true);
+        assertEquals(q1.poll(), 1);
+        assertEquals(q1.poll(), 2);
+        assertEquals(q1.poll(), 3);
     }
 
     /**
-     * A test method for poll() in CustomQStack
+     * A test method for poll() in CustomSQueue
      */
     @Test
     public void testPoll() {
-
+        // not do it? maybe merge with testAdd()
     }
 }

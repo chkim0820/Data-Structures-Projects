@@ -5,7 +5,7 @@ import javax.xml.bind.TypeConstraintException;
  * @author Chaehyeon Kim cxk445
  */
 
-public class DoublyLinkedList {
+public class DoublyLinkedList extends Iterator {
 
     /** The head node of the list */
     private IntNode head;
@@ -72,69 +72,36 @@ public class DoublyLinkedList {
                 tailTrav.setNext(headTrav.getNext());
                 headTrav.getNext().setPrev(saveBack); // iterator? ask TA what the benefit would be & what the implementation would look like 
                 tailTrav.getPrev().setNext(saveFront);
-
+                if (i >= 1) {
+                    // add things to arrange the original head's previous node's next pointer, vise versa
+                } // make it also work for even number nodes
 
             headTrav = headTrav.getNext();
             tailTrav = tailTrav.getPrev();
+            }
         }
     }
+}
 
-    /**
-     * An Iterator class for the DoublyLinkedList class; for no direct modification of the modes(?)
-     */
-    public class Iterator { // inside DLL class so things can be accessed from inside; double check
+/* Function to reverse the linked list */
+Node reverse(Node node) {
+    Node prev = null; // to store the previous value
+    Node current = node; // for current pointer
+    Node next = null; // for next
+    while (current != null) {
+        next = current.next;
+        current.next = prev;
+        prev = current;
+        current = next;
+    }
+    node = prev;
+    return node; // this will return the new head
+}
 
-        /** variable for the pointer of the next node */
-        private IntNode nextNode; // iterates through the all nodes of the list
-        /** variable for the pointer of the previous node */
-        private IntNode prevNode;
-
-        /**
-         * A constructor for the Iterator class
-         */
-        public Iterator() {
-            nextNode = head;
-            prevNode = tail;
-        }
-
-        /**
-         * returns the next of the node the pointer is currently on
-         * @return the next of the node the pointer is currently on
-         */
-        public int next() {
-            if (nextNode == null)
-                throw new NullPointerException();
-            int i = nextNode.getValue();
-            nextNode = nextNode.getNext();
-            return i; 
-        }
-
-        /**
-         * returns whether there is a next node
-         * @return whether there is a next node
-         */
-        public boolean hasNext() {
-            return (nextNode != null);
-        }
-
-        /**
-         * return the previous of the node the pointer is currently on
-         * @return the previous of the node the pointer is currently on
-         */
-        public int previous() {
-            if (prevNode == null)
-                new NullPointerException();
-            int i = prevNode.getValue();
-            prevNode = prevNode.getPrev();
-            return i;
-        }
-
-        /**
-         * return whether there is a previous node
-         * @return whether there is a previous node
-         */
-        public boolean hasPrevious() {
-            return (prevNode != null);
-        }
+// prints content of double linked list
+void printList(Node node){
+    while (node != null) {
+    System.out.print(node.data + " ");
+    node = node.next;
     }
 }
