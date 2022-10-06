@@ -117,7 +117,23 @@ public class HW2TestingClass {
         try {
             s1.pop()
         }
-        catch (EmptyStackExcep)
+        catch (EmptyStackException e) {
+            // exception thrown correctly 
+        }
+        s1.push(1);
+        assertEquals(s1.pop(), 1);
+        for (int i = 0; i < 3; i++) {
+            s1.push(i + 1);
+        }
+        assertEquals(s1.pop(), 3);
+        assertEquals(s1.pop(), 2);
+        assertEquals(s1.pop(), 1);
+        try {
+            s1.pop();
+        }
+        catch (empty e1) {
+            // exception thrown correctly
+        }
     }
 
     /**
@@ -125,7 +141,10 @@ public class HW2TestingClass {
      */
     @Test
     public void testPush() {
-
+        CustomQStack s1 = new CustomQStack();
+        assertEquals(s1.push(1), 1);
+        assertEquals(s1.push(2), 2);
+        assertEquals(s1.push(3), 3);
     }
 
     /** Test methods for CustomSQueue class' methods */
