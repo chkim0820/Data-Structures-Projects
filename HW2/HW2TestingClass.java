@@ -50,7 +50,12 @@ public class HW2TestingClass {
      */
     @Test
     public void testNext() {
-
+        DoublyLinkedList.Iterator it = list.iterator();
+        assertEquals(it.next(), 9);
+        assertEquals(it.next(), 8);
+        assertEquals(it.next(), 7);
+        assertEquals(it.next(), 6);
+        assertEquals(it.next(), 5);
     }
 
     /**
@@ -58,7 +63,11 @@ public class HW2TestingClass {
      */
     @Test
     public void testHasNext() {
-
+        DoublyLinkedList.Iterator it = list.iterator();
+        assertEquals(it.hasNext(), true);
+        DoublyLinkedList list2 = new DoublyLinkedList();
+        DoublyLinkedList.Iterator it2 = list2.iterator();
+        assertEquals(it2.hasNext(), false);
     }
 
     /**
@@ -66,7 +75,7 @@ public class HW2TestingClass {
      */
     @Test
     public void testPrevious() {
-
+        
     }
 
     /**
