@@ -75,7 +75,12 @@ public class HW2TestingClass {
      */
     @Test
     public void testPrevious() {
-        
+        DoublyLinkedList.Iterator it = list.iterator();
+        assertEquals(it.previous(), 5);
+        assertEquals(it.previous(), 6);
+        assertEquals(it.previous(), 7);
+        assertEquals(it.previous(), 8);
+        assertEquals(it.previous(), 9);
     }
 
     /**
@@ -83,7 +88,11 @@ public class HW2TestingClass {
      */
     @Test
     public void testHasPrevious() {
-
+        DoublyLinkedList.Iterator it = list.iterator();
+        assertEquals(it.hasPrevious(), true);
+        DoublyLinkedList list2 = new DoublyLinkedList();
+        DoublyLinkedList.Iterator it2 = list2.iterator();
+        assertEquals(it.hasPrevious(), false);
     }
 
     /** Test methods for CustomQStack class' methods */
@@ -93,7 +102,10 @@ public class HW2TestingClass {
      */
     @Test
     public void testEmpty() {
-
+        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
+        assertEquals(s1.empty(), true);
+        s1.push(1);
+        assertEquals(s1.empty(), false);
     }
 
     /**
@@ -101,7 +113,11 @@ public class HW2TestingClass {
      */
     @Test
     public void testPop() {
-
+        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
+        try {
+            s1.pop()
+        }
+        catch (EmptyStackExcep)
     }
 
     /**

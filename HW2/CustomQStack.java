@@ -26,7 +26,7 @@ public class CustomQStack {
      * @return whether this stack is empty or not
      */
     public boolean empty() {
-        return (size != 0);
+        return (size == 0);
     }
 
     /**
