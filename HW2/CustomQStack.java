@@ -1,5 +1,4 @@
 import java.util.EmptyStackException;
-import java.util.Queue;
 
 /**
  * A CustomQStack class for CSDS 233 HW 2
@@ -9,7 +8,7 @@ import java.util.Queue;
 public class CustomQStack {
 
     /** The queue used for the implementation of a Stack */
-    private Queue<Integer> queue;
+    private Queue queue;
     /** A variable for keeping track of the number of elements in this Stack */
     private int size = 0;
 
@@ -18,7 +17,7 @@ public class CustomQStack {
      * @param queue the queue used for the implementation of a Stack
      */
     public CustomQStack() {
-        this.queue = new Queue<Integer>();
+        this.queue = new Queue();
     }
 
     /**

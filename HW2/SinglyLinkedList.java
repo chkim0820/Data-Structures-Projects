@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /**
  * A SinglyLinkedClass used for nodes containing Integer values; for CSDS 233 hw 2
  * @author Chaehyeon Kim cxk445
@@ -12,6 +14,14 @@ public class SinglyLinkedList {
      */
     public SinglyLinkedList () {
         this.node = null;
+    }
+
+    public Integer removeFirst() throws NoSuchElementException {
+        if (node == null)
+            throw new NoSuchElementException();
+        int save = node.getValue();
+        node = node.getNext();
+        return save;
     }
 
     /**
@@ -61,13 +71,13 @@ public class SinglyLinkedList {
     public class LLIterator <G> {
 
         /** A pointer to the head node of the list */
-        private LLNode<Integer> pointer;
+        private LLNode<G> pointer;
 
         /**
          * The constructor for the LLIterator class
          * @param node the head node of the list
          */
-        public LLIterator (LLNode<Integer> node) {
+        public LLIterator (LLNode<G> node) {
             this.pointer = node;
         }
         
@@ -86,7 +96,7 @@ public class SinglyLinkedList {
         public int next() throws NullPointerException {
             if (!hasNext()) // throw an exception if the list is null
                 throw new NullPointerException();
-            int save = pointer.getValue(); // variable to save the value of the pointer
+            int save = (int) pointer.getValue(); // variable to save the value of the pointer; converted to int b/c assumed to only use integers
             pointer = pointer.getNext(); // making the pointer to point at the next node
             return save;
         }

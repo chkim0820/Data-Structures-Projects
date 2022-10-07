@@ -66,10 +66,10 @@ public class LLNode <G> {
 
     /**
      * set the next as the input node
-     * @param next the next node of this node
+     * @param llNode the next node of this node
      */
-    public void setNext(LLNode<G> next) {
-        this.next = next;
+    public void setNext(LLNode<G> llNode) {
+        this.next = llNode;
     }
 
     /**
