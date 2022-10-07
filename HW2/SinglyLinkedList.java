@@ -1,43 +1,39 @@
 /**
- * A SinglyLinkedClass for CSDS 233 hw 2
+ * A SinglyLinkedClass used for nodes containing Integer values; for CSDS 233 hw 2
  * @author Chaehyeon Kim cxk445
  */
-
 public class SinglyLinkedList {
     
+    /** A field storing the head of the linked list */
     private LLNode<Integer> node;
-    private LLNode<Integer> next;
 
+    /**
+     * A constructor for the SinglyLinkedList class
+     */
     public SinglyLinkedList () {
         this.node = null;
-        this.next = null;
     }
 
-    public LLNode<Integer> getNext() {
-        return next;
-    }
-
-    public void setNext(LLNode<Integer> nextNode) {
-        next.setNext(nextNode);
-    }
-
+    /**
+     * An iterator() method to return a newly-created Iterator for this linked list
+     * @return a newly-created Iterator for this linked list
+     */
     public LLIterator<Integer> iterator() {
         return new LLIterator<Integer>(node);
     }
 
     /**
      * A method that is invoked on a list object and reverse the list using no additional lists
-     * (Got help from the hw2 office hour session)
      */
     public void reverse() {
-        LLIterator<Integer> it = iterator();
+        LLIterator<Integer> it = iterator(); // creating an Iterator for this list
         // variables to keep track of the former and latter nodes
         LLNode<Integer> prev = null;
         LLNode<Integer> current = node;
         LLNode<Integer> next = null;
         while (it.hasNext()) { // iterating through the whole list and reversing
             next = current.getNext();
-            current.setNext(prev); // now do this with an iterator?
+            current.setNext(prev);
             prev = current;
             current = next;
         }
@@ -52,18 +48,18 @@ public class SinglyLinkedList {
         private LLNode<Integer> pointer;
 
         /**
-         * The constructor for the LLIterator class.
-         * @param node the head node of the list.
+         * The constructor for the LLIterator class
+         * @param node the head node of the list
          */
         public LLIterator (LLNode<Integer> node) {
             this.pointer = node;
         }
         
         /**
-         * Returns true if the iteration has more elements and throw NullPointerException if null.
-         * @return true if the iteration has more elements.
+         * Returns true if the iteration has more elements
+         * @return true if the iteration has more elements
          */
-        public boolean hasNext() throws NullPointerException {
+        public boolean hasNext() {
             return (pointer != null);
         }
 
@@ -71,11 +67,11 @@ public class SinglyLinkedList {
          * Returns the next element in the iteration and move the pointer to the next node.
          * @return the next element in the iteration.
          */
-        public int next() {
-            if (!hasNext())
+        public int next() throws NullPointerException {
+            if (!hasNext()) // throw an exception if the list is null
                 throw new NullPointerException();
-            int save = pointer.getValue();
-            pointer = pointer.getNext();
+            int save = pointer.getValue(); // variable to save the value of the pointer
+            pointer = pointer.getNext(); // making the pointer to point at the next node
             return save;
         }
     }

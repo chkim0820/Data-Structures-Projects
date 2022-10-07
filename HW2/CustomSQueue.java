@@ -5,12 +5,12 @@ import java.util.Stack;
  * Demonstrate that Stacks can be modified to act like Queues
  * @author Chaehyeon Kim cxk445
  */
-public class CustomSQueue <G> {
+public class CustomSQueue {
     
     /** The first stack used for the implementation of queue */
-    private Stack<G> s1;
+    private Stack<Integer> s1;
     /** The second stack used for the implementation of queue */
-    private Stack<G> s2;
+    private Stack<Integer> s2;
     /** The number of elements in this Queue */
     private int size = 0;
 
@@ -19,7 +19,7 @@ public class CustomSQueue <G> {
      * @param stack1 the first stack used for the implementation of queue
      * @param stack2 the second stack used for the implementation of queue
      */
-    public CustomSQueue(Stack<G> stack1, Stack<G> stack2) {
+    public CustomSQueue(Stack<Integer> stack1, Stack<Integer> stack2) {
         this.s1 = stack1;
         this.s2 = stack2;
     }
@@ -27,11 +27,9 @@ public class CustomSQueue <G> {
     /**
      * Inserts the specified element into this queue if it's possible
      * @param e the element to be inserted into this queue
-     * @return true upon success, IllegalStateException if no space available
+     * @return true upon success
      */
-    public boolean add(G e) throws IllegalStateException {
-        if (s1.push(e) != e) // idk what the condition should be; should I just not
-            throw new IllegalStateException(); 
+    public boolean add(Integer e) {
         s1.push(e);
         size++;
         return true;
@@ -41,15 +39,19 @@ public class CustomSQueue <G> {
      * Retrieves and removes the head of this queue, or returns null if this queue is empty
      * @return the head of this queue
      */
-    public G poll() {
-        for (int i = 0; i < size; i++) {
-            s2.push(s1.pop());
+    public Integer poll() {
+        if (size == 0) // returns null if the queue is empty
+            return null;
+        else { // queue is not empty
+            for (int i = 0; i < size; i++) { // moves all the elements into s2
+                s2.push(s1.pop());
+            }
+            int returnThis = s2.pop(); // pops the first-inserted element out of s2 and save to the variable to be returned later
+            size--;
+            for (int i = 0; i < size; i++) { // moves the remaining elements back to s1
+                s1.push(s2.pop());
+            }
+            return returnThis;
         }
-        G returnThis = s2.pop();
-        size--;
-        for (int i = 0; i < size; i++) {
-            s1.push(s2.pop());
-        }
-        return returnThis;
     }
 }
