@@ -36,14 +36,20 @@ public class SinglyLinkedList {
      * Apends the specified element to the end of the list
      * @param e the element to be added at the end of the list
      */
-    public void add(Integer e) {
+    public int add(Integer e) {
         LLNode<Integer> end = node;
         LLIterator<Integer> it = iterator();
-        while (it.hasNext()) {
-            end = end.getNext();
+        if (!it.hasNext())
+            node = new LLNode<Integer>(e);
+        else {
             it.next();
+            while (it.hasNext()) {
+                end = end.getNext();
+                it.next();
+            }
+            end.setNext(new LLNode<Integer>(e));
         }
-        end.setNext(new LLNode<Integer>(e));
+        return e;
     }
 
     /**
@@ -56,13 +62,13 @@ public class SinglyLinkedList {
         LLNode<Integer> current = node;
         LLNode<Integer> next = null;
         while (it.hasNext()) { // iterating through the whole list and reversing
+            it.next();
             next = current.getNext();
             current.setNext(prev);
             prev = current;
             current = next;
-            it.next();
         }
-        node = current;
+        node = prev;
     }
 
     /**

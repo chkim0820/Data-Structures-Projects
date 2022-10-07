@@ -9,8 +9,6 @@ import java.util.EmptyStackException;
  * @author Chaehyeon Kim cxk445
  */
 public class HW2TestingClass {
-    
-    SinglyLinkedList list = new SinglyLinkedList();
 
     /** Test methods for SinglyLinkedList class' methods */
 
@@ -19,6 +17,7 @@ public class HW2TestingClass {
      */
     @Test
     public void testSLLAdd() {
+        SinglyLinkedList list = new SinglyLinkedList();
         list.add(5);
         SinglyLinkedList.LLIterator<Integer> it = list.iterator();
         assertEquals(it.next(), 5);
@@ -37,13 +36,16 @@ public class HW2TestingClass {
      */
     @Test
     public void testReverse() {
+        SinglyLinkedList list = new SinglyLinkedList();
+        for (int i = 5; i < 10; i++)
+            list.add(i);
         list.reverse();
         SinglyLinkedList.LLIterator<Integer> it = list.iterator();
-        assertEquals(it.next(), 9);
-        assertEquals(it.next(), 8);
+        assertEquals(it.next(), 9); //7
+        assertEquals(it.next(), 8); //7
         assertEquals(it.next(), 7);
-        assertEquals(it.next(), 6);
-        assertEquals(it.next(), 5);
+        assertEquals(it.next(), 6); //8
+        assertEquals(it.next(), 5); //8
     }
 
     /** Test methods for the LLIterator class' methods */
@@ -55,13 +57,26 @@ public class HW2TestingClass {
     public void testNext() {
         SinglyLinkedList list2 = new SinglyLinkedList();
         SinglyLinkedList.LLIterator<Integer> it = list2.iterator();
+        try {
+            it.next();
+        }
+        catch (NullPointerException e) {
+            // exception thrown correctly
+        }
         for (int i = 1; i < 6; i++)
             list2.add(i);
-        assertEquals(it.next(), 1);
-        assertEquals(it.next(), 2);
-        assertEquals(it.next(), 3);
-        assertEquals(it.next(), 4);
-        assertEquals(it.next(), 5);
+        SinglyLinkedList.LLIterator<Integer> it2 = list2.iterator();
+        assertEquals(it2.next(), 1);
+        assertEquals(it2.next(), 2);
+        assertEquals(it2.next(), 3);
+        assertEquals(it2.next(), 4);
+        assertEquals(it2.next(), 5);
+        try {
+            it2.next();
+        }
+        catch (NullPointerException e2) {
+            // exception thrown correctly
+        }
     }
 
     /**
@@ -76,8 +91,11 @@ public class HW2TestingClass {
             list2.add(i);
         SinglyLinkedList.LLIterator<Integer> it2 = list2.iterator();
         assertEquals(it2.hasNext(), true);
+        it2.next();
         assertEquals(it2.hasNext(), true);
+        it2.next();
         assertEquals(it2.hasNext(), true);
+        it2.next();
         assertEquals(it2.hasNext(), false);
     }
 
@@ -88,9 +106,9 @@ public class HW2TestingClass {
      */
     @Test
     public void testEmpty() {
-        CustomQStack s1 = new CustomQStack();
+        CustomQStack s1 = new CustomQStack(); // s1 is empty
         assertEquals(s1.empty(), true);
-        s1.push(1);
+        s1.push(1); // s1 no longer empty
         assertEquals(s1.empty(), false);
     }
 
@@ -106,7 +124,7 @@ public class HW2TestingClass {
         catch (EmptyStackException e) {
             // exception thrown correctly; was an empty stack 
         }
-        s1.push(1);
+        assertEquals(s1.push(1).intValue(), 1);
         assertEquals(s1.pop().intValue(), 1);
         for (int i = 0; i < 3; i++) {
             s1.push(i + 1);
