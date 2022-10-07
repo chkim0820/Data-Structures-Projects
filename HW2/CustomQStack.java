@@ -17,8 +17,8 @@ public class CustomQStack {
      * The constructor for the CustomQStack class
      * @param queue the queue used for the implementation of a Stack
      */
-    public CustomQStack(Queue<Integer> queue) {
-        this.queue = queue;
+    public CustomQStack() {
+        this.queue = new Queue<Integer>();
     }
 
     /**

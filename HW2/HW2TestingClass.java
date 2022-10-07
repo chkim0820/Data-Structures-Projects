@@ -1,61 +1,66 @@
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
 import java.util.EmptyStackException;
-import java.util.Iterator;
 
 /**
- * A JUnit testing class for the CSDS 233 hw2
+ * A JUnit testing class for CSDS 233 hw2
  * @author Chaehyeon Kim cxk445
  */
 public class HW2TestingClass {
     
-    DoublyLinkedList list = new DoublyLinkedList();
+    SinglyLinkedList list = new SinglyLinkedList();
 
-    /** Test methods for DoublyLinkedList class' methods */
+    /** Test methods for SinglyLinkedList class' methods */
 
     /**
-     * A test method for add() in DoublyLinkedList class
+     * A test method for add() in SinglyLinkedList class
      */
     @Test
-    public void testAdd() { // do the test methods also have to follow the encapsulation rule?
+    public void testSLLAdd() {
         list.add(5);
-        assertEquals(list.getHead().getValue(), 5);
+        SinglyLinkedList.LLIterator<Integer> it = list.iterator();
+        assertEquals(it.next(), 5);
         for (int i = 6; i < 10; i++)
             list.add(i);
-        assertEquals(list.getHead().getNext().getValue(), 6);
-        assertEquals(list.getHead().getNext().getNext().getValue(), 7);
-        assertEquals(list.getHead().getNext().getNext().getNext().getValue(), 8);
-        assertEquals(list.getHead().getNext().getNext().getNext().getNext().getValue(), 9);
+        SinglyLinkedList.LLIterator<Integer> it2 = list.iterator();
+        assertEquals(it2.next(), 5);
+        assertEquals(it2.next(), 6);
+        assertEquals(it2.next(), 7);
+        assertEquals(it2.next(), 8);
+        assertEquals(it2.next(), 9);
     }
 
     /**
-     * A test method for reverse() in DoublyLinkedList class
+     * A test method for reverse() in SinglyLinkedList class
      */
     @Test
     public void testReverse() {
-        for (int i = 5; i < 10; i++)
-            list.add(i);
         list.reverse();
-        assertEquals(list.getHead().getValue(), 9); 
-        assertEquals(list.getHead().getNext().getValue(), 8);
-        assertEquals(list.getHead().getNext().getNext().getValue(), 7);
-        assertEquals(list.getHead().getNext().getNext().getNext().getValue(), 6);
-        assertEquals(list.getHead().getNext().getNext().getNext().getNext().getValue(), 5);
+        SinglyLinkedList.LLIterator<Integer> it = list.iterator();
+        assertEquals(it.next(), 9);
+        assertEquals(it.next(), 8);
+        assertEquals(it.next(), 7);
+        assertEquals(it.next(), 6);
+        assertEquals(it.next(), 5);
     }
 
-    /** Test methods for the Iterator class' methods */
+    /** Test methods for the LLIterator class' methods */
 
     /**
      * A test method for next() in Iterator
      */
     @Test
     public void testNext() {
-        Iterator it = list.iterator();
-        assertEquals(it.next(), 9);
-        assertEquals(it.next(), 8);
-        assertEquals(it.next(), 7);
-        assertEquals(it.next(), 6);
+        SinglyLinkedList list2 = new SinglyLinkedList();
+        SinglyLinkedList.LLIterator<Integer> it = list2.iterator();
+        for (int i = 1; i < 6; i++)
+            list2.add(i);
+        assertEquals(it.next(), 1);
+        assertEquals(it.next(), 2);
+        assertEquals(it.next(), 3);
+        assertEquals(it.next(), 4);
         assertEquals(it.next(), 5);
     }
 
@@ -64,36 +69,16 @@ public class HW2TestingClass {
      */
     @Test
     public void testHasNext() {
-        Iterator it = list.iterator();
-        assertEquals(it.hasNext(), true);
-        DoublyLinkedList list2 = new DoublyLinkedList();
-        DoublyLinkedList.Iterator it2 = list2.iterator();
+        SinglyLinkedList list2 = new SinglyLinkedList();
+        SinglyLinkedList.LLIterator<Integer> it = list2.iterator();
+        assertEquals(it.hasNext(), false);
+        for (int i = 1; i < 4; i++)
+            list2.add(i);
+        SinglyLinkedList.LLIterator<Integer> it2 = list2.iterator();
+        assertEquals(it2.hasNext(), true);
+        assertEquals(it2.hasNext(), true);
+        assertEquals(it2.hasNext(), true);
         assertEquals(it2.hasNext(), false);
-    }
-
-    /**
-     * A test method for previous() in Iterator
-     */
-    @Test
-    public void testPrevious() {
-        DoublyLinkedList.Iterator it = list.iterator();
-        assertEquals(it.previous(), 5);
-        assertEquals(it.previous(), 6);
-        assertEquals(it.previous(), 7);
-        assertEquals(it.previous(), 8);
-        assertEquals(it.previous(), 9);
-    }
-
-    /**
-     * A test method for hasPrevious() in Iterator
-     */
-    @Test
-    public void testHasPrevious() {
-        DoublyLinkedList.Iterator it = list.iterator();
-        assertEquals(it.hasPrevious(), true);
-        DoublyLinkedList list2 = new DoublyLinkedList();
-        DoublyLinkedList.Iterator it2 = list2.iterator();
-        assertEquals(it.hasPrevious(), false);
     }
 
     /** Test methods for CustomQStack class' methods */
@@ -103,32 +88,32 @@ public class HW2TestingClass {
      */
     @Test
     public void testEmpty() {
-        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
+        CustomQStack s1 = new CustomQStack();
         assertEquals(s1.empty(), true);
         s1.push(1);
         assertEquals(s1.empty(), false);
     }
 
     /**
-     * A test method for pop() in CustomQStack
+     * A test method for pop() and push() in CustomQStack
      */
     @Test
-    public void testPop() {
-        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
+    public void testPopAndPush() {
+        CustomQStack s1 = new CustomQStack();
         try {
-            s1.pop()
+            s1.pop();
         }
         catch (EmptyStackException e) {
-            // exception thrown correctly 
+            // exception thrown correctly; was an empty stack 
         }
         s1.push(1);
-        assertEquals(s1.pop(), 1);
+        assertEquals(s1.pop().intValue(), 1);
         for (int i = 0; i < 3; i++) {
             s1.push(i + 1);
         }
-        assertEquals(s1.pop(), 3);
-        assertEquals(s1.pop(), 2);
-        assertEquals(s1.pop(), 1);
+        assertEquals(s1.pop().intValue(), 3);
+        assertEquals(s1.pop().intValue(), 2);
+        assertEquals(s1.pop().intValue(), 1);
         try {
             s1.pop();
         }
@@ -137,38 +122,19 @@ public class HW2TestingClass {
         }
     }
 
-    /**
-     * A test method for push() in CustomQStack
-     */
-    @Test
-    public void testPush() {
-        CustomQStack s1 = new CustomQStack(new Queue<Integer>);
-        assertEquals(s1.push(1), 1);
-        assertEquals(s1.push(2), 2);
-        assertEquals(s1.push(3), 3);
-    }
-
     /** Test methods for CustomSQueue class' methods */
 
     /**
-     * A test method for add() in CustomSQueue
+     * A test method for add() and poll() in CustomSQueue
      */
     @Test
-    public void testSQueueAdd() {
-        CustomSQueue q1 = new CustomSQueue(new Stack<Integer>(), new Stack<Integer());
+    public void testSQueueAddandPoll() {
+        CustomSQueue q1 = new CustomSQueue();
         assertEquals(q1.add(1), true);
         assertEquals(q1.add(2), true);
         assertEquals(q1.add(3), true);
-        assertEquals(q1.poll(), 1);
-        assertEquals(q1.poll(), 2);
-        assertEquals(q1.poll(), 3);
-    }
-
-    /**
-     * A test method for poll() in CustomSQueue
-     */
-    @Test
-    public void testPoll() {
-        // not do it? maybe merge with testAdd()
+        assertEquals(q1.poll().intValue(), 1);
+        assertEquals(q1.poll().intValue(), 2);
+        assertEquals(q1.poll().intValue(), 3);
     }
 }

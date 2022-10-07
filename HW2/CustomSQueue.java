@@ -19,9 +19,9 @@ public class CustomSQueue {
      * @param stack1 the first stack used for the implementation of queue
      * @param stack2 the second stack used for the implementation of queue
      */
-    public CustomSQueue(Stack<Integer> stack1, Stack<Integer> stack2) {
-        this.s1 = stack1;
-        this.s2 = stack2;
+    public CustomSQueue() {
+        s1 = new Stack<>();
+        s2 = new Stack<>();
     }
 
     /**
@@ -53,5 +53,9 @@ public class CustomSQueue {
             }
             return returnThis;
         }
+    }
+
+    public Stack<Integer> getS1() {
+        return s1;
     }
 }

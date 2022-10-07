@@ -23,6 +23,20 @@ public class SinglyLinkedList {
     }
 
     /**
+     * Apends the specified element to the end of the list
+     * @param e the element to be added at the end of the list
+     */
+    public void add(Integer e) {
+        LLNode<Integer> end = node;
+        LLIterator<Integer> it = iterator();
+        while (it.hasNext()) {
+            end = end.getNext();
+            it.next();
+        }
+        end.setNext(new LLNode<Integer>(e));
+    }
+
+    /**
      * A method that is invoked on a list object and reverse the list using no additional lists
      */
     public void reverse() {
@@ -36,7 +50,9 @@ public class SinglyLinkedList {
             current.setNext(prev);
             prev = current;
             current = next;
+            it.next();
         }
+        node = current;
     }
 
     /**
