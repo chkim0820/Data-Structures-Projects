@@ -1,0 +1,8 @@
+Classes explanation (for CSDS 233 HW 2)
+1. SinglyLinkedList: A class implementing a singly LinkedList ADT (no prev pointers for each nodes and only next pointers). Added add() method to add nodes containing desired elements to the end and removeFirst() to remove the head of the list (useful for Queue class). It is iterable. It has reverse() method as directed in the assignment sheet.
+2. LLIterator: This is a nested class inside the SinglyLinkedList class. It has the standard methods for Iterator classes, such as next() and hasNext().
+3. LLNode: A node class designed for the SinglyLinkedList class above; it only has a pointer to the next node of the current node. It has two fields for the value of this node (value) and the pointer to the next node (next) and getter/setter methods for each fields.
+4. Queue: A class implementing the Queue ADT. It is designed specifically for this assignent, so it doesn't have all the methods required for classes implementing the Queue Interface. Has add() to add to the queue and remove() to remove from the queue.
+5. CustomSQueue: A Queue ADT implemented using two stacks as directed in the assignment sheet. Has the required methods.
+6. CustomQStack: A Stack ADT implemented using one queue as directed in the assignment sheet. Has the required methods.
+7. HW2TestingClass: A JUnit testing class for all the Java classes in this folder for this assignment. Tests all the methods except trivial methods like getter/setter methods, iterator(), etc.
