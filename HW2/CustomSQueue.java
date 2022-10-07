@@ -16,8 +16,6 @@ public class CustomSQueue {
 
     /**
      * A constructor for the CustomSQueue class
-     * @param stack1 the first stack used for the implementation of queue
-     * @param stack2 the second stack used for the implementation of queue
      */
     public CustomSQueue() {
         s1 = new Stack<>();
@@ -32,7 +30,7 @@ public class CustomSQueue {
     public boolean add(Integer e) {
         s1.push(e);
         size++;
-        return true;
+        return true; // assuming that for this assignment, the size limit for the stack will not be reached.
     }
 
     /**
@@ -53,9 +51,5 @@ public class CustomSQueue {
             }
             return returnThis;
         }
-    }
-
-    public Stack<Integer> getS1() {
-        return s1;
     }
 }

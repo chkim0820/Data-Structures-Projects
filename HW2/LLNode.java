@@ -1,27 +1,22 @@
 /**
- * An LLNode class for CSDS 233 HW 2
+ * An LLNode class built for the SinglyLinkedList class; for CSDS 233 HW 2
  * @author Chaehyeon Kim cxk445
  */
-
 public class LLNode <G> {
 
     /** the value of the node */
     private G value;
     /** the next node of this node */
-    private LLNode<G> next = null;
-    /** the previous node of this node */
-    private LLNode<G> prev = null;
+    private LLNode<G> next;
 
     /**
      * A constructor for the LLNode class with three inputs
      * @param value the value of the node
      * @param next the next node of this node
-     * @param prev the previou node of this node
      */
-    public LLNode(G value, LLNode<G> next, LLNode<G> prev) {
+    public LLNode(G value, LLNode<G> next) {
         this.value = value;
         this.next = next;
-        this.prev = prev;
     }
 
     /**
@@ -30,6 +25,7 @@ public class LLNode <G> {
      */
     public LLNode(G value) {
         this.value = value;
+        this.next = null;
     }
 
     /**
@@ -49,14 +45,6 @@ public class LLNode <G> {
     }
 
     /**
-     * returns the previous node of this node
-     * @return the previous node of this node
-     */
-    public LLNode<G> getPrev() {
-        return prev;
-    }
-
-    /**
      * set the value as the input value
      * @param value the value to be set as the node's value
      */
@@ -70,13 +58,5 @@ public class LLNode <G> {
      */
     public void setNext(LLNode<G> llNode) {
         this.next = llNode;
-    }
-
-    /**
-     * set the prev as the input node
-     * @param prev the prev node of this node
-     */
-    public void setPrev (LLNode<G> prev) {
-        this.prev = prev;
     }
 }

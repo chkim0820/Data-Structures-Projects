@@ -1,5 +1,3 @@
-import java.util.NoSuchElementException;
-
 /**
  * A SinglyLinkedClass used for nodes containing Integer values; for CSDS 233 hw 2
  * @author Chaehyeon Kim cxk445
@@ -16,10 +14,15 @@ public class SinglyLinkedList {
         this.node = null;
     }
 
-    public Integer removeFirst() throws NoSuchElementException {
-        if (node == null)
-            throw new NoSuchElementException();
-        int save = node.getValue();
+    /**
+     * Removes the front node of the list
+     * @return The value contained in the removed node
+     * @throws NullPointerException thrown when there is no node to remove in the list
+     */
+    public Integer removeFirst() throws NullPointerException {
+        if (node == null) // throw an exception in case of an empty list
+            throw new NullPointerException();
+        int save = node.getValue(); // saves the value to be returned
         node = node.getNext();
         return save;
     }
@@ -35,19 +38,22 @@ public class SinglyLinkedList {
     /**
      * Apends the specified element to the end of the list
      * @param e the element to be added at the end of the list
+     * @return the element to be added at the end of the list
      */
     public int add(Integer e) {
-        LLNode<Integer> end = node;
-        LLIterator<Integer> it = iterator();
+        LLNode<Integer> end = node; // the node at the end of the list
+        LLIterator<Integer> it = iterator(); // iterator for this list
+        // if the list is empty, add a new node to the head node of the list
         if (!it.hasNext())
             node = new LLNode<Integer>(e);
+        // if the list is not empty, traverse through the list and add a new node at the end
         else {
             it.next();
-            while (it.hasNext()) {
+            while (it.hasNext()) { // traversing through the list
                 end = end.getNext();
                 it.next();
             }
-            end.setNext(new LLNode<Integer>(e));
+            end.setNext(new LLNode<Integer>(e)); // setting a new node
         }
         return e;
     }

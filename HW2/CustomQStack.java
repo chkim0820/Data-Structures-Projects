@@ -14,7 +14,6 @@ public class CustomQStack {
 
     /**
      * The constructor for the CustomQStack class
-     * @param queue the queue used for the implementation of a Stack
      */
     public CustomQStack() {
         this.queue = new Queue();
@@ -33,17 +32,18 @@ public class CustomQStack {
      * @return the value that is returned
      */
     public Integer pop() throws EmptyStackException{
-        if (size == 0)
+        if (size == 0) // the stack is empty
             throw new EmptyStackException();
-        for (int i = 1; i < size; i++) {
+        for (int i = 1; i < size; i++) { // for-loop to add the front values of the queue to the back after removing
             queue.add(queue.remove());
         }
         size--;
-        return queue.remove(); // int vs. Integer? check if conversion necessary
+        return queue.remove();
     }
 
     /**
      * Pushes an item onto the top of this stack
+     * @param e the element to be pushed onto the stack
      * @return the item that is pushed onto the top of this stack
      */
     public Integer push(Integer e) {
