@@ -83,21 +83,7 @@ public class DoublyLinkedList extends Iterator {
     }
 }
 
-/* Function to reverse the linked list */
-Node reverse(Node node) {
-    Node prev = null; // to store the previous value
-    Node current = node; // for current pointer
-    Node next = null; // for next
-    while (current != null) {
-        next = current.next;
-        current.next = prev;
-        prev = current;
-        current = next;
-    }
-    node = prev;
-    return node; // this will return the new head
-}
-
+/* from the TA's office hour
 // prints content of double linked list
 void printList(Node node){
     while (node != null) {
@@ -105,3 +91,4 @@ void printList(Node node){
     node = node.next;
     }
 }
+*/

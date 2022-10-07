@@ -6,10 +6,10 @@ import java.util.Queue;
  * @author Chaehyeon Kim cxk445 
  */
 
-public class CustomQStack {
+public class CustomQStack <G> {
 
     /** The queue used for the implementation of a Stack */
-    private Queue<Integer> queue;
+    private Queue<G> queue;
     /** A variable for keeping track of the number of elements in this Stack */
     private int size = 0;
 
@@ -17,7 +17,7 @@ public class CustomQStack {
      * The constructor for the CustomQStack class
      * @param queue the queue used for the implementation of a Stack
      */
-    public CustomQStack(Queue<Integer> queue) {
+    public CustomQStack(Queue<G> queue) {
         this.queue = queue;
     }
 
@@ -33,7 +33,7 @@ public class CustomQStack {
      * Removes the object at the top of this stack and returns that object as the value of this function
      * @return the value that is returned
      */
-    public int pop() throws EmptyStackException{
+    public G pop() throws EmptyStackException{
         if (size == 0)
             throw new EmptyStackException();
         for (int i = 1; i < size; i++) {
@@ -47,8 +47,8 @@ public class CustomQStack {
      * Pushes an item onto the top of this stack
      * @return the item that is pushed onto the top of this stack
      */
-    public int push(int e) {
-        queue.add(new Integer(e));
+    public G push(G e) {
+        queue.add(G);
         size++;
         return e;
     }

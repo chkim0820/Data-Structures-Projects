@@ -5,12 +5,12 @@ import java.util.Stack;
  * Demonstrate that Stacks can be modified to act like Queues
  * @author Chaehyeon Kim cxk445
  */
-public class CustomSQueue {
+public class CustomSQueue <G> {
     
     /** The first stack used for the implementation of queue */
-    private Stack<Integer> s1;
+    private Stack<G> s1;
     /** The second stack used for the implementation of queue */
-    private Stack<Integer> s2;
+    private Stack<G> s2;
     /** The number of elements in this Queue */
     private int size = 0;
 
@@ -19,7 +19,7 @@ public class CustomSQueue {
      * @param stack1 the first stack used for the implementation of queue
      * @param stack2 the second stack used for the implementation of queue
      */
-    public CustomSQueue(Stack<Integer> stack1, Stack<Integer> stack2) {
+    public CustomSQueue(Stack<G> stack1, Stack<G> stack2) {
         this.s1 = stack1;
         this.s2 = stack2;
     }
@@ -29,7 +29,7 @@ public class CustomSQueue {
      * @param e the element to be inserted into this queue
      * @return true upon success, IllegalStateException if no space available
      */
-    public boolean add(int e) throws IllegalStateException {
+    public boolean add(G e) throws IllegalStateException {
         if (s1.push(e) != e) // idk what the condition should be; should I just not
             throw new IllegalStateException(); 
         s1.push(e);
@@ -41,11 +41,11 @@ public class CustomSQueue {
      * Retrieves and removes the head of this queue, or returns null if this queue is empty
      * @return the head of this queue
      */
-    public int poll() {
+    public G poll() {
         for (int i = 0; i < size; i++) {
             s2.push(s1.pop());
         }
-        int returnThis = s2.pop();
+        G returnThis = s2.pop();
         size--;
         for (int i = 0; i < size; i++) {
             s1.push(s2.pop());
