@@ -1,5 +1,3 @@
-import javax.lang.model.util.ElementScanner6;
-
 /**
  * A class for CSDS 233 hw 3
  * @author Chaehyeon Kim cxk445
@@ -29,9 +27,9 @@ public class BST_Class {
         if (node == null) // base case; if the node is null
             return new Node(key);
         if (node.getKey() <= key)
-            node.setRight(insertRecursive(node.getRight()));
+            node.setRight(insertRecursive(node.getRight(), key));
         else if (node.getKey() > key)
-            node.setLeft(insertRecursive(node.getLeft()));
+            node.setLeft(insertRecursive(node.getLeft(), key));
         return node;
     }
     // choose the more efficient out of the two later
@@ -59,9 +57,9 @@ public class BST_Class {
                 }
             }
             if (leftRight < 0)
-                parent.setLeft(key);
+                parent.setLeft(new Node(key));
             else if (leftRight > 0)
-                parent.setRight(key);
+                parent.setRight(new Node(key));
             else
                 System.out.print("something is wrong with insert()"); // erase later
         }
@@ -85,10 +83,10 @@ public class BST_Class {
      */
     public void inorder(Node node) {
         if (node.getLeft() != null)
-            inorderRecursive(node.getLeft());
+            inorder(node.getLeft());
         System.out.print(node.getKey());
         if (node.getRight() != null)
-            inorderRecursive(node.getRight());
+            inorder(node.getRight());
     }
 
     /**
@@ -98,9 +96,9 @@ public class BST_Class {
     public void preorder(Node node) {
         System.out.print(node.getKey());
         if (node.getLeft() != null)
-            inorderRecursive(node.getLeft());
+            preorder(node.getLeft());
         if (node.getRight() != null)
-            inorderRecursive(node.getRight());
+            preorder(node.getRight());
     }
 
     /**
@@ -148,8 +146,44 @@ public class BST_Class {
      * @param key a key of the node to be deleted
      */
     public void deleteKey(int key) {
-        if (search(key)) {
-            
+        if (search(key)) { // is this efficient
+            Node parent = null;
+            Node trav = root;
+            int leftRight = 0; // -1 if to parent's left, 1 if to parent's right
+            while ((trav.getLeft() != null && trav.getRight() != null) || (key == trav.getKey())) { // move pointers
+                if (key > trav.getKey()) {
+                    parent = trav;
+                    trav = trav.getRight();
+                    leftRight = 1;
+                }
+                else if (key < trav.getKey()) {
+                    parent = trav;
+                    trav = trav.getLeft();
+                    leftRight = -1;
+                }
+            }
+            if (trav.getRight() == null && trav.getLeft() == null) { // no child
+                if (leftRight > 0)
+                    parent.setRight(null);
+                else
+                    parent.setLeft(null);
+            }
+            else if (trav.getRight() == null && trav.getLeft() != null) { // only one of the two childern present
+                if (leftRight > 0)
+                    parent.setRight(trav.getLeft());
+                else
+                    parent.setLeft(trav.getLeft());
+            }
+            else if (trav.getRight() != null && trav.getLeft() == null) {
+                if (leftRight > 0)
+                    parent.setRight(trav.getRight());
+                else
+                    parent.setLeft(trav.getRight());
+            }
+            else if (trav.getRight() != null && trav.getLeft() != null) { // have both left and right children
+                trav.setKey(minValue(trav.getRight()));
+            }
+
         }
     }
 }
