@@ -1,5 +1,5 @@
 /**
- * Main class containing the main method for BST_Class class
+ * Main class containing the main method for BST_Class
  * @author Chaehyeon Kim cxk445
  */
 public class Main {
@@ -33,6 +33,7 @@ public class Main {
         bst.inorder(bst.root);
         System.out.println("\nKey 50 found in BST: " + bst.search(50)); // would this work for boolean values or other primitive types like int
         System.out.println("Key 12 found in BST: " + bst.search(12));
+
         // resetting the tree for the next part
         bst.deleteKey(7);
         bst.deleteKey(10);
@@ -42,6 +43,7 @@ public class Main {
         bst.insert(7);
         bst.insert(12);
         bst.insert(90);
+        
         System.out.println("BST => PreOrder Traversal:");
         bst.preorder(bst.root);
         System.out.println("\nBST => InOrder Traversal:");
