@@ -23,7 +23,7 @@ public class BST_Class {
      * @param node node to be compared
      * @return new node to be inserted at the base case or the current trav node
      */
-    public Node insertRecursive(Node node, int key) {
+    private Node insertRecursive(Node node, int key) {
         if (node == null) // base case; if the node is null
             return new Node(key);
         if (node.getKey() <= key)
@@ -66,7 +66,7 @@ public class BST_Class {
             postorder(node.getLeft());
         if (node.getRight() != null)
             postorder(node.getRight());
-        System.out.print(node.getKey());
+        System.out.print(node.getKey() + " ");
     }
 
     /**
@@ -78,7 +78,7 @@ public class BST_Class {
             throw new NullPointerException("The tree is empty");
         if (node.getLeft() != null)
             inorder(node.getLeft());
-        System.out.print(node.getKey());
+        System.out.print(node.getKey() + " ");
         if (node.getRight() != null)
             inorder(node.getRight());
     }
@@ -90,7 +90,7 @@ public class BST_Class {
     public void preorder(Node node) {
         if (node == null) 
             throw new NullPointerException("The tree is empty");
-        System.out.print(node.getKey());
+        System.out.print(node.getKey() + " ");
         if (node.getLeft() != null)
             preorder(node.getLeft());
         if (node.getRight() != null)
@@ -139,44 +139,43 @@ public class BST_Class {
      * @param key a key of the node to be deleted
      */
     public void deleteKey(int key) {
-        if (search(key)) { // is this efficient
-            Node parent = null;
-            Node trav = root;
-            int leftRight = 0; // -1 if to parent's left, 1 if to parent's right
-            while ((trav.getLeft() != null && trav.getRight() != null) || (key == trav.getKey())) { // move pointers
-                if (key > trav.getKey()) {
-                    parent = trav;
-                    trav = trav.getRight();
-                    leftRight = 1;
-                }
-                else if (key < trav.getKey()) {
-                    parent = trav;
-                    trav = trav.getLeft();
-                    leftRight = -1;
-                }
-            }
-            if (trav.getRight() == null && trav.getLeft() == null) { // no child
-                if (leftRight > 0)
-                    parent.setRight(null);
-                else
-                    parent.setLeft(null);
-            }
-            else if (trav.getRight() == null && trav.getLeft() != null) { // only one of the two childern present
-                if (leftRight > 0)
-                    parent.setRight(trav.getLeft());
-                else
-                    parent.setLeft(trav.getLeft());
-            }
-            else if (trav.getRight() != null && trav.getLeft() == null) {
-                if (leftRight > 0)
-                    parent.setRight(trav.getRight());
-                else
-                    parent.setLeft(trav.getRight());
-            }
-            else if (trav.getRight() != null && trav.getLeft() != null) { // have both left and right children
-                trav.setKey(minValue(trav.getRight()));
-            }
+        Node parent = null;
+        Node trav = root;
+        while (trav != null && trav.getKey() != key) { // move pointers
+            parent = trav;
+            if (key < trav.getKey())
+                trav = trav.getLeft();
+            else
+                trav = trav.getRight();
+        }
+        if (trav != null)
+            deleteNode(trav, parent);
+    }
 
+    /**
+     * Helper method for deleteKey() method
+     * @param trav node traversing the tree; node to be deleted
+     * @param parent the parent node of the trav node
+     */
+    private void deleteNode(Node trav, Node parent) { // case 1 and 2; no child or one child
+        if (trav.getRight() == null || trav.getLeft() == null) { // no child
+            Node toDeleteChild = null; // variable to store the one child of the node to be replaced (if there's any)
+            if (trav.getLeft() != null)
+                toDeleteChild = trav.getLeft();
+            else
+                toDeleteChild = trav.getRight();
+            // making the child be the left/right of parent node accordingly
+            if (trav == root)
+                root = toDeleteChild;
+            else if (trav.getKey() < parent.getKey())
+                parent.setLeft(toDeleteChild);
+            else
+                parent.setRight(toDeleteChild);
+        }
+        else { // case 3; have both left and right children
+            int replacement = minValue(trav.getRight());
+            deleteKey(replacement);
+            trav.setKey(replacement);
         }
     }
 
