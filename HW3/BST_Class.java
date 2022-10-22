@@ -15,7 +15,7 @@ public class BST_Class {
      * @param key key of the node to be inserted
      */
     public void insert(int key) {
-        root = insertRecursive(root, key); // calls the recursive helper method below
+        root = insertRecursive(root, key); // calls the recursive helper method, insertRecursive, below
     }
 
     /**
@@ -38,31 +38,21 @@ public class BST_Class {
      * @param key key of the node to be inserted
      */
     public void insertIterative(int key) { // iterative; try to make one with recursion
-        if (root == null) // if the tree is empty
-            root = new Node(key);
-        else { // tree not empty
-            Node trav = root;
-            Node parent = null;
-            int leftRight = 0; // -1 if to parent's left, 1 if to parent's right
-            while (trav != null) {
-                if (trav.getKey() <= key) {
-                    parent = trav;
-                    trav = trav.getRight();
-                    leftRight = 1;
-                }
-                else {
-                    parent = trav;
-                    trav = trav.getLeft();
-                    leftRight = -1;
-                }
-            }
-            if (leftRight < 0)
-                parent.setLeft(new Node(key));
-            else if (leftRight > 0)
-                parent.setRight(new Node(key));
+        Node trav = root;
+        Node parent = null;
+        while (trav != null) {
+            parent = trav;
+            if (trav.getKey() <= key)
+                trav = trav.getRight();
             else
-                System.out.print("something is wrong with insert()"); // erase later
+                trav = trav.getLeft();
         }
+        if (parent == null) // the tree was empty
+            root = new Node(key);
+        else if (key < parent.getKey())
+            parent.setRight(new Node(key));
+        else
+            parent.setLeft(new Node(key));
     }
     
     /**
@@ -70,6 +60,8 @@ public class BST_Class {
      * @param node the root node of the BST to be traversed post-orderly
      */
     public void postorder(Node node) {
+        if (node == null)
+            throw new NullPointerException("The tree is empty");
         if (node.getLeft() != null)
             postorder(node.getLeft());
         if (node.getRight() != null)
@@ -82,6 +74,8 @@ public class BST_Class {
      * @param node the root node of the BST to be traversed in-orderly
      */
     public void inorder(Node node) {
+        if (node == null)
+            throw new NullPointerException("The tree is empty");
         if (node.getLeft() != null)
             inorder(node.getLeft());
         System.out.print(node.getKey());
@@ -94,12 +88,14 @@ public class BST_Class {
      * @param node the root node of the BST to be traversed pre-orderly
      */
     public void preorder(Node node) {
+        if (node == null) 
+            throw new NullPointerException("The tree is empty");
         System.out.print(node.getKey());
         if (node.getLeft() != null)
             preorder(node.getLeft());
         if (node.getRight() != null)
             preorder(node.getRight());
-    }
+        }
 
     /**
      * Checks whether a given key exists in BST
@@ -110,19 +106,14 @@ public class BST_Class {
         if (root == null)
             return false;
         else {
-            Node parent = null;
             Node trav = root;
             while (trav != null) {
                 if (key == trav.getKey())
                     return true;
-                else if (key > trav.getKey()) {
-                    parent = trav;
+                else if (key > trav.getKey())
                     trav = trav.getRight();
-                }
-                else if (key < trav.getKey()) {
-                    parent = trav;
+                else if (key < trav.getKey())
                     trav = trav.getLeft();
-                }
             }
             return false;
         }
@@ -135,6 +126,8 @@ public class BST_Class {
      */
     public int minValue(Node root) {
         Node trav = root;
+        if (trav == null)
+            throw new NullPointerException("The tree is empty");
         while (trav.getLeft() != null) {
             trav = trav.getLeft();
         }
@@ -184,6 +177,43 @@ public class BST_Class {
                 trav.setKey(minValue(trav.getRight()));
             }
 
+        }
+    }
+
+    public class Node {
+    
+        int key;
+        Node left; 
+        Node right;
+    
+        public Node(int key) {
+            this.key = key;
+            this.left = null;
+            this.right = null;
+        }
+    
+        public int getKey() {
+            return key;
+        }
+    
+        public Node getLeft() {
+            return left;
+        }
+    
+        public Node getRight() {
+            return right;
+        }
+    
+        public void setKey(int key) {
+            this.key = key;
+        }
+    
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+    
+        public void setRight(Node right) {
+            this.right = right;
         }
     }
 }
