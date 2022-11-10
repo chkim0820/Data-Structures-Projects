@@ -13,6 +13,10 @@ public class HashLList {
         this.head = new Node(null);
     }
 
+    public String getItem() {
+        return head.item;
+    }
+
     public void addLast(String str) {
         Node trav = head;
         if (trav == null)
@@ -41,6 +45,30 @@ public class HashLList {
                 }
                 trav = trav.next;
              }
+        }
+    }
+
+    public LIterator iterator() {
+        return new LIterator();
+    }
+
+    public class LIterator {
+        private Node nextNode;
+
+        private LIterator() {
+            nextNode = head;
+        }
+
+        public boolean hasNext() {
+            return (nextNode != null);
+        }
+
+        public String next() {
+            if (nextNode == null)
+                throw new NullPointerException();
+            String str = nextNode.item;
+            nextNode = nextNode.next;
+            return str;
         }
     }
 

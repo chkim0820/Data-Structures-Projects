@@ -15,10 +15,24 @@ public class WordCount {
      * @param str 
      * @return prints out all the words encountered in the input string
      */
-    public String wordCount(String str) { // static?
+    public void wordCount(String str) {
         HashTable table = wordInsert(str); // helper method that inserts the words into the hash table
-
+        for (int i = 0; i < table.getTableSize(); i++) {
+            HashLList list = table.getTableContents(i);
+            String word = list.getItem();
+            int occur = 0;
+            if (list != null) {
+                HashLList.LIterator it = list.iterator();
+                while (it.hasNext()) {
+                    it.next();
+                    occur++;
+                }
+            }
+            System.out.println("The word " + word + " appeared " + String.valueOf(occur) + " many times.");
+        }
+        // can create another hash table with the keys being the number occurrences or just arrays of 
     }
+    // Yes, please use ''Math.abs(str.hashCode())'' to calculate the numerical code of the "words".
 
     /**
      * Inserts all the individual words into the hash table
@@ -26,7 +40,7 @@ public class WordCount {
      */
     private HashTable wordInsert(String str) {
         table = new HashTable(str.length() / 4); // arbitrary; fix how to rearrange later
-        //String[] words = String.split(“\\P{Alpha}+”);
+        //String[] words = String.split(“\P{Alpha}+”);
         for (int i = 0; i < str.length() ; i++) {
             StringBuilder builder = new StringBuilder();
             while ((str.charAt(i) >= 65 && str.charAt(i) <= 90) || (str.charAt(i) >= 97 && str.charAt(i) <= 122) && (i < str.length())) {
@@ -39,14 +53,16 @@ public class WordCount {
         return table;
     }
 
-    private int wordOccurence (String str) {
-        for (int i = 0; i < table.getTableSize() && table.getTableContents(i) != null; i++) {
-            HashLList list = table.getTableContents(i);
-            String word = list.get;
+    private String wordOccur() {
+        HashLList list = table.getTableContents(i);
+        String word = list.getItem();
+        if (list != null) {
+            HashLList.LIterator it = list.iterator();
+            int occur = 0;
+            while (it.hasNext()) {
+                it.next();
+                occur++;
+            }
         }
-    }
-
-    public public static void main(String[] args) {
-        
     }
 }
