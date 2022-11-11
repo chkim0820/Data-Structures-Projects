@@ -31,7 +31,7 @@ public class HashTable {
         String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
         int index = (Math.abs(s.hashCode())) % tableSize; // h1
         int h2 = (Math.abs(s.hashCode())) % 13;
-        while (table[index] != null) { // linear probing if full
+        while (table[index] != null || !s.equals(getWord(index))) { // use h2 if original index full
             index = index + h2;
         }
         return index;
@@ -74,7 +74,10 @@ public class HashTable {
     }
 
     public String getWord(int index) {
-        return table[index].list.getWord();
+        if (table[index] != null)
+            return table[index].list.getWord();
+        else
+            return null;
     }
 
     /**
