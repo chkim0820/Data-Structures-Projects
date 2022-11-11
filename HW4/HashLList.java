@@ -1,5 +1,3 @@
-import java.util.NoSuchElementException;
-
 /**
  * A singly Linked List class for the HashTable class using separate chaining
  * @author Chaehyeon Kim
@@ -7,14 +5,9 @@ import java.util.NoSuchElementException;
 public class HashLList {
    
     private Node head;
-    private int numItem;
 
     public HashLList() {
-        this.head = new Node(null);
-    }
-
-    public String getItem() {
-        return head.item;
+        this.head = null;
     }
 
     public void addLast(String str) {
@@ -29,22 +22,27 @@ public class HashLList {
         }
     }
 
-    public void delete(String str) {
+    public void delete(String str) throws Exception {
         Node trav = head;
         if (trav == null)
-            throw new NoSuchElementException();
+            throw new Exception("The list is empty.");
         else {
             boolean nodeDeleted = false;
-            while (trav.next != null || nodeDeleted) {
-                if (trav.next.item.equals(str)) {
-                    if (trav == head)
-                        head = trav.next;
-                    else 
-                        trav.next = trav.next.next;
+            String travItem = trav.item.toLowerCase(); // the item at trav
+            String strLower = str.toLowerCase();
+            if (trav == head) {
+                if (travItem.equals(strLower)) {
+                    head = trav.next;
+                    nodeDeleted = true;
+                }
+            }
+            while (trav.next != null || !nodeDeleted) {
+                if (travItem.equals(strLower)) {
+                    trav.next = trav.next.next;
                     nodeDeleted = true;
                 }
                 trav = trav.next;
-             }
+            }
         }
     }
 
@@ -53,6 +51,7 @@ public class HashLList {
     }
 
     public class LIterator {
+
         private Node nextNode;
 
         private LIterator() {
@@ -75,14 +74,13 @@ public class HashLList {
     /**
      * A Node class for HashLList class
      */
-    public class Node {
+    private class Node {
         private String item;
         private Node next;
 
-        public Node(String item) {
+        private Node(String item) {
             this.item = item;
             next = null;
         }
     }
-
 }
