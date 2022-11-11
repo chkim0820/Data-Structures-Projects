@@ -10,6 +10,10 @@ public class HashLList {
         this.head = null;
     }
 
+    public String getWord() {
+        return head.item;
+    }
+
     public void addLast(String str) {
         Node trav = head;
         if (trav == null)

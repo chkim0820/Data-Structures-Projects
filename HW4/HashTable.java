@@ -11,6 +11,10 @@ public class HashTable {
     /** Field storing the number of items stored in the table */
     private int numItem;
 
+    public int getTableSize() {
+        return tableSize;
+    }
+
     /**
      * Constructor for the HashTable class
      * @param size the size of the table
@@ -21,9 +25,16 @@ public class HashTable {
         numItem = 0;
     }
 
-    public int probe(String str) { //idk how to do this method; delete the middle section?
+    // account for the possibility of more than one words ending up at the same index
+    // try to make every index be for unique words
+    public int probe(String str) {
         String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
-        return (Math.abs(s.hashCode())) % tableSize;
+        int index = (Math.abs(s.hashCode())) % tableSize; // h1
+        int h2 = (Math.abs(s.hashCode())) % 13;
+        while (table[index] != null) { // linear probing if full
+            index = index + h2;
+        }
+        return index;
     }
 
     public void insert(String str) {
@@ -50,6 +61,20 @@ public class HashTable {
         }
         table = temp;
         tableSize = (int)(tableSize * 1.25);
+    }
+
+    public int getNumRepeats(int index) {
+        HashLList.LIterator it = table[index].list.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            i++;
+            it.next();
+        }
+        return i;
+    }
+
+    public String getWord(int index) {
+        return table[index].list.getWord();
     }
 
     /**

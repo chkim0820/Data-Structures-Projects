@@ -22,7 +22,8 @@ public class WordCount {
         for (int i = 0; i < arr.length; i++) { // inserting the words into the hash table
             table.insert(arr[i]);
         }
-        // make a method in hashtable class to help iterate through the lists 
-        // account for the possibility of more than one words ending up at the same index
+        for (int j = 0; j < table.getTableSize(); j++) {
+            System.out.println("The word " + table.getWord(j) + " is repeated " + table.getNumRepeats(j) + " times.");
+        }
     }
 }
