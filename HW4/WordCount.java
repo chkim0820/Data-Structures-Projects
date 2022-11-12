@@ -19,7 +19,8 @@ public class WordCount {
      */
     public void wordCount(String str) {
         String[] arr = str.split("\\P{Alpha}+");
-        for (int i = 0; i < arr.length; i++) { // inserting the words into the hash table
+        table = new HashTable(arr.length);
+        for (int i = 0; i < arr.length; i++) { // inserting the words (Strings) into the hash table
             table.insert(arr[i]);
         }
         for (int j = 0; j < table.getTableSize(); j++) {

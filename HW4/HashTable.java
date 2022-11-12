@@ -10,10 +10,7 @@ public class HashTable {
     private int tableSize;
     /** Field storing the number of items stored in the table */
     private int numItem;
-
-    public int getTableSize() {
-        return tableSize;
-    }
+    private int numDeleted;
 
     /**
      * Constructor for the HashTable class
@@ -23,6 +20,11 @@ public class HashTable {
         table = new Entry[size];
         tableSize = size;
         numItem = 0;
+        numDeleted = 0;
+    }
+
+    public int getTableSize() {
+        return tableSize;
     }
 
     // account for the possibility of more than one words ending up at the same index
@@ -30,27 +32,35 @@ public class HashTable {
     public int probe(String str) {
         String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
         int index = (Math.abs(s.hashCode())) % tableSize; // h1
-        int h2 = (Math.abs(s.hashCode())) % 13;
-        while (table[index] != null || !s.equals(getWord(index))) { // use h2 if original index full
+        int h2 = (Math.abs(s.hashCode())) % 13; // h2
+        while (!s.equals(getWord(index)) || (table[index] != null && table[index].removed)) { // use h2 if original index full
             index = index + h2;
         }
         return index;
     }
 
     public void insert(String str) {
-        if ((numItem / tableSize) >= 1)
+        if ((numItem / tableSize) >= 1 || (numDeleted / tableSize) >= 1) // rehashing conditions
             rehash();
-        table[probe(str)].list.addLast(str);
+        table[probe(str)].list.addLast(str.toLowerCase()); // insert all lower case String
         numItem++;
     }
 
     public void delete(String str) throws Exception {
-        table[probe(str)].list.delete(str); // exception!
+        int i = probe(str);
+        if (table[i].list.delete(str)) {
+            table[i].removed = true;
+            numDeleted++;
+        }
         numItem--;
     }
 
     public void rehash() {
-        Entry[] temp = new Entry[(int)(tableSize * 1.25)];
+        Entry[] temp;
+        if ((numItem / tableSize) >= 1)
+            temp = new Entry[(int)(tableSize * 1.25)];
+        else
+            temp = new Entry[tableSize];
         for (int i = 0; i < table.length; i++) { // move values over to temp
             HashLList li = table[i].list;
             HashLList.LIterator it = li.iterator();
@@ -64,6 +74,7 @@ public class HashTable {
     }
 
     public int getNumRepeats(int index) {
+        /**
         HashLList.LIterator it = table[index].list.iterator();
         int i = 0;
         while (it.hasNext()) {
@@ -71,6 +82,8 @@ public class HashTable {
             it.next();
         }
         return i;
+        */
+        return table[index].list.getNumItem();
     }
 
     public String getWord(int index) {
@@ -86,10 +99,12 @@ public class HashTable {
     private class Entry { // removed field not needed?
         private String key; // needed?
         private HashLList list;
+        private boolean removed;
 
         private Entry (String key){
             this.key = key;
             list = null;
+            removed = false;
         }
     }
 }

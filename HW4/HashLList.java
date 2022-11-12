@@ -5,13 +5,21 @@
 public class HashLList {
    
     private Node head;
+    private int numItem;
 
     public HashLList() {
         this.head = null;
+        this.numItem = 0;
     }
 
     public String getWord() {
+        if (head == null)
+            return null;
         return head.item;
+    }
+
+    public int getNumItem() {
+        return numItem;
     }
 
     public void addLast(String str) {
@@ -24,9 +32,10 @@ public class HashLList {
             }
             trav.next = new Node(str);
         }
+        numItem++;
     }
 
-    public void delete(String str) throws Exception {
+    public boolean delete(String str) throws Exception {
         Node trav = head;
         if (trav == null)
             throw new Exception("The list is empty.");
@@ -38,6 +47,7 @@ public class HashLList {
                 if (travItem.equals(strLower)) {
                     head = trav.next;
                     nodeDeleted = true;
+                    return true; // empty but removed
                 }
             }
             while (trav.next != null || !nodeDeleted) {
@@ -47,6 +57,8 @@ public class HashLList {
                 }
                 trav = trav.next;
             }
+            numItem--;
+            return false; // array index didn't go from occupied to empty
         }
     }
 
