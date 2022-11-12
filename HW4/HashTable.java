@@ -101,7 +101,10 @@ public class HashTable {
                 //int index = probe(temp[i].key);
                 while (it.hasNext()) {
                     String str = it.next();
-                    insert(str);
+                    int index = probe(str);
+                    if (table[index] == null)
+                        table[index] = new Entry(str.toLowerCase());    
+                    table[index].list.addLast(str); // insert all lower case String
                 }
             }
         }
