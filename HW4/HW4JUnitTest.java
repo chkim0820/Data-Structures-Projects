@@ -1,4 +1,7 @@
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
@@ -49,7 +52,7 @@ public class HW4JUnitTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void testListDelete() throws Exception {
         HashLList list = new HashLList();
 
         // checking for exception handling
@@ -117,5 +120,68 @@ public class HW4JUnitTest {
         catch (NullPointerException e2) {
             // exception thrown correctly
         }
+    }
+
+    /** HashTable Test Methods */
+    
+    @Test
+    public void testGetNumRepeats() {
+        HashTable table = new HashTable(5);
+        
+        try {
+            table.getNumRepeats(1);
+        }
+        catch (NoSuchElementException e) {
+            // Exception supposed to be thrown
+        }
+
+        int i = Math.abs("a".hashCode()) % 5;
+        for (int j = 0; j < 3; j++)
+            table.insert("A");
+        assertEquals(3, table.getNumRepeats(i));
+
+        int a = Math.abs("b".hashCode()) % 9; // will rehash
+        for (int b = 0; b < 5; b++)
+            table.insert("B");
+        assertEquals(5, table.getNumRepeats(a));
+    }
+
+    @Test
+    public void testTableGetWord() {
+        HashTable table = new HashTable(5);
+
+        assertEquals(null, table.getWord(0));
+
+        table.insert("A");
+        assertEquals("A", table.getWord(Math.abs("a".hashCode()) % 5));
+    }
+
+    @Test
+    public void testInsert() {
+        HashTable table = new HashTable(5);
+
+        // Check if equal for upper and lower cases
+        int i = Math.abs("a".hashCode()) % 5;
+        table.insert("A");
+        table.insert("a");
+        assertEquals(2, table.getNumRepeats(i));
+
+        int a = Math.abs("b".hashCode()) % 5;
+        int b = Math.abs("c".hashCode()) % 5;
+        table.insert("B");
+        table.insert("C");
+        assertEquals("B", table.getWord(a));
+        assertEquals("C", table.getWord(b));
+        // Check if assigned to different indeces
+        assertNotEquals(a, b);
+
+        // Check if it rehashes correctly
+        table.insert("D");
+        table.insert("E");
+    }
+
+    @Test
+    public void testTableDelete() {
+
     }
 }
