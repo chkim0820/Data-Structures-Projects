@@ -13,6 +13,9 @@ public class HW4JUnitTest {
 
     /** HashLList Test Methods */
 
+    /**
+     * Test method for getNumItem() in HashLList
+     */
     @Test
     public void testGetNumItem() {
         HashLList list = new HashLList();
@@ -23,10 +26,13 @@ public class HW4JUnitTest {
         assertEquals(1, list.getNumItem());
         list.addLast("hi");
         assertEquals(2, list.getNumItem());
-        list.addLast(null);
+        list.addLast(null); // nodes containing null values still counted as one
         assertEquals(3, list.getNumItem());
     }
 
+    /**
+     * Test method for addLast() in HashLList
+     */
     @Test
     public void testAddLast() {
         HashLList list = new HashLList();
@@ -35,21 +41,26 @@ public class HW4JUnitTest {
         list.addLast("B");
         list.addLast(null);
 
+        // the items added are correctly added to the end of the list
         HashLList.LIterator it = list.iterator();
         assertEquals("A", it.next());
         assertEquals("B", it.next());
         assertEquals(null, it.next());
     }
 
+    /**
+     * Test method for delete() in HashLList
+     * @throws Exception exceptions in the methods are checked
+     */
     @Test
-    public void testListDelete() throws Exception {
+    public void testListDelete() throws NoSuchElementException {
         HashLList list = new HashLList();
 
         // checking for exception handling
         try {
             list.delete(null);
         }
-        catch (Exception e) {
+        catch (NoSuchElementException e) {
             // exception caught; all good since it was supposed to throw an exception
         }
 
@@ -71,6 +82,10 @@ public class HW4JUnitTest {
     }
 
     /** Test methods for LLiterator class, a nested class of HashLList */
+
+    /**
+     * Test method for hasNext() of LLiterator class
+     */
     @Test
     public void testHasNext() {
         HashLList list = new HashLList(); // a SLL for this test method
@@ -88,6 +103,9 @@ public class HW4JUnitTest {
         assertEquals(it2.hasNext(), false);
     }
 
+    /**
+     * Test method for next() of LLiterator class
+     */
     @Test
     public void testNext() {
         HashLList list = new HashLList(); // a SLL for this test method
@@ -114,38 +132,51 @@ public class HW4JUnitTest {
 
     /** HashTable Test Methods */
     
+    /**
+     * Test method for getNumItems() in HashTable
+     */
     @Test
     public void testGetNumItems() {
         HashTable table = new HashTable(5);
         
-        try {
+        try { //table is empty; can't calculate numItems
             table.getNumItems(1);
         }
         catch (NoSuchElementException e) {
             // Exception supposed to be thrown
         }
 
+        // Inserting a value 3 times at i 
         int i = Math.abs("a".hashCode()) % 5;
         for (int j = 0; j < 3; j++)
             table.insert("A");
         assertEquals(3, table.getNumItems(i));
 
-        int a = Math.abs("b".hashCode()) % 9; // will rehash
+        // Inserting a value 9 times at i; will rehash
+        int a = Math.abs("b".hashCode()) % 9;
         for (int b = 0; b < 5; b++)
             table.insert("B");
         assertEquals(5, table.getNumItems(a));
     }
 
+    /**
+     * Test method for getWord() in HashTable
+     */
     @Test
     public void testTableGetWord() {
         HashTable table = new HashTable(5);
 
+        // Method called at an empty index; null supposed to be returned
         assertEquals(null, table.getWord(0));
 
+        // Checking if the word's case is lowered
         table.insert("A");
         assertEquals("a", table.getWord(Math.abs("a".hashCode()) % 5));
     }
 
+    /**
+     * Test method for insert() in HashTable
+     */
     @Test
     public void testInsert() { // and probe() and rehash()
         HashTable table = new HashTable(5);
@@ -177,8 +208,12 @@ public class HW4JUnitTest {
         assertEquals("d", table.getWord(d));
     }
 
+    /**
+     * Test method for delete() in HashTable
+     * @throws NoSuchElementException thrown and caught to see if thrown as the method is supposed to
+     */
     @Test
-    public void testTableDelete() throws Exception { // and probe() and rehash()
+    public void testTableDelete() throws NoSuchElementException { // and probe() and rehash()
         HashTable table = new HashTable(5);
 
         for (int i = 0; i < 5; i++)
@@ -212,5 +247,5 @@ public class HW4JUnitTest {
         assertEquals("f", table.getWord(f));
     }
 
-    /** Testing for the wordCount method has been completed with the main method. */
+    /** Testing for the wordCount method was done with the main method of the WordCount class. */
 }

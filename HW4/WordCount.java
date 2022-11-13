@@ -55,15 +55,5 @@ public class WordCount {
         System.out.println("\nThis time, a String input with multiple non-alphabetical characters in between words is tested.\nThe input is " + '"' + "Hi.   -___-  \n HI!!!!!!!! hello......\t hello?" + '"' +"HELLO?" +'"' + '"' +".");
         System.out.println("The output is printed below:");
         wc.wordCount("Hi.   -___-  \n HI!!!!!!!! hello......\t hello? " + '"' +"HELLO?" +'"');
-        
-        /**
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            builder.append(args[i] + ' ');
-        }
-        String str = builder.toString();
-        WordCount wc = new WordCount();
-        wc.wordCount(str);
-        */
     }
 }
