@@ -220,14 +220,4 @@ public class HW4JUnitTest {
         wc.wordCount("Hello hi hello");
 
     }
-
-    public static void main(String[] args) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            builder.append(args[i]);
-        }
-        String str = builder.toString();
-        WordCount wc = new WordCount();
-        wc.wordCount(str);
-    }
 }

@@ -28,4 +28,14 @@ public class WordCount {
                 System.out.println("The word " + table.getWord(j) + " is repeated " + table.getNumRepeats(j) + " times.");
         }
     }
+
+    public static void main(String[] args) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < args.length; i++) {
+            builder.append(args[i]);
+        }
+        String str = builder.toString();
+        WordCount wc = new WordCount();
+        wc.wordCount("");
+    }
 }
