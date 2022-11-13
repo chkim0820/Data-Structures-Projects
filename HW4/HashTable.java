@@ -30,16 +30,11 @@ public class HashTable {
         return tableSize;
     }
 
+    public boolean isEmpty(int i) {
+        return (table[i] == null);
+    }
+
     public int getNumRepeats(int index) {
-        /**
-        HashLList.LIterator it = table[index].list.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            i++;
-            it.next();
-        }
-        return i;
-        */
         if (table[index] != null)
             return table[index].list.getNumItem();
         else
@@ -48,27 +43,13 @@ public class HashTable {
 
     public String getWord(int index) {
         if (table[index] != null)
-            return table[index].list.getWord();
+            return table[index].key;
         else
             return null;
     }
 
-    // account for the possibility of more than one words ending up at the same index
-    // try to make every index be for unique words
-    private int probe(String str) {
-        String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
-        int index = (Math.abs(s.hashCode())) % tableSize; // h1
-        int h2 = (Math.abs(s.hashCode())) % 13; // h2
-        int i = 0;
-        while (!s.equals(getWord(index)) && (table[index] != null && table[index].removed) && (i < tableSize)) { // use h2 if original index full
-            index = (index + h2) % tableSize;
-            i++;
-        }
-        return index;
-    }
-
     public void insert(String str) { // have to initialize entry when entering a new value
-        if ((numItem / tableSize) >= 1 || (numDeleted / tableSize) >= 1) // rehashing conditions
+        if ((numItem / tableSize) >= 1 || ((2 * numDeleted) / tableSize) >= 1) // rehashing conditions
             rehash();
         int i = probe(str);
         if (table[i] == null)
@@ -79,14 +60,30 @@ public class HashTable {
 
     public void delete(String str) throws Exception { // rehash?
         int i = probe(str);
-        if (table[i].list.delete(str)) {
-            table[i].removed = true;
-            numDeleted++;
+        if (table[i] != null) {
+            if (table[i].list.delete(str)) {
+                table[i].removed = true;
+                numDeleted++;
+            }
+            numItem--;
         }
-        numItem--;
     }
 
-    public void rehash() {
+    // account for the possibility of more than one words ending up at the same index
+    // try to make every index be for unique words
+    private int probe(String str) {
+        String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
+        int index = (Math.abs(s.hashCode())) % tableSize; // h1
+        int h2 = (Math.abs(s.hashCode())) % 13; // h2
+        int i = 0;
+        while (!s.equals(getWord(index)) && (i < tableSize) && (table[index] != null && !table[index].removed)) { // use h2 if original index full
+            index = (index + h2) % tableSize;
+            i++;
+        }
+        return index;
+    }
+
+    private void rehash() {
         Entry[] temp = table;
         if ((numItem / tableSize) >= 1) {
             table = new Entry[tableSize * 2 - 1];

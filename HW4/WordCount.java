@@ -24,7 +24,8 @@ public class WordCount {
             table.insert(arr[i]);
         }
         for (int j = 0; j < table.getTableSize(); j++) {
-            System.out.println("The word " + table.getWord(j) + " is repeated " + table.getNumRepeats(j) + " times.");
+            if (!table.isEmpty(j))
+                System.out.println("The word " + table.getWord(j) + " is repeated " + table.getNumRepeats(j) + " times.");
         }
     }
 }

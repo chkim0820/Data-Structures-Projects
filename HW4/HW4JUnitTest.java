@@ -14,16 +14,6 @@ public class HW4JUnitTest {
     /** HashLList Test Methods */
 
     @Test
-    public void testGetWord() {
-        HashLList list = new HashLList();
-        // head null
-        assertEquals(null, list.getWord());
-        // head not null
-        list.addLast("Hello");
-        assertEquals("Hello", list.getWord());
-    }
-
-    @Test
     public void testGetNumItem() {
         HashLList list = new HashLList();
         // 0 item
@@ -153,35 +143,91 @@ public class HW4JUnitTest {
         assertEquals(null, table.getWord(0));
 
         table.insert("A");
-        assertEquals("A", table.getWord(Math.abs("a".hashCode()) % 5));
+        assertEquals("a", table.getWord(Math.abs("a".hashCode()) % 5));
     }
 
     @Test
-    public void testInsert() {
+    public void testInsert() { // and probe() and rehash()
         HashTable table = new HashTable(5);
 
         // Check if equal for upper and lower cases
-        int i = Math.abs("a".hashCode()) % 5;
+        int a = Math.abs("a".hashCode()) % 5;
         table.insert("A");
         table.insert("a");
-        assertEquals(2, table.getNumRepeats(i));
+        assertEquals(2, table.getNumRepeats(a));
 
-        int a = Math.abs("b".hashCode()) % 5;
-        int b = Math.abs("c".hashCode()) % 5;
+        // more test cases
+        int b = Math.abs("b".hashCode()) % 5;
+        int c = Math.abs("c".hashCode()) % 5;
         table.insert("B");
         table.insert("C");
-        assertEquals("B", table.getWord(a));
-        assertEquals("C", table.getWord(b));
+        assertEquals("b", table.getWord(b));
+        assertEquals("c", table.getWord(c));
         // Check if assigned to different indeces
-        assertNotEquals(a, b);
+        assertNotEquals(b, c);
+
+        // Check if probe() works well for two values leading to the same result with hashCode() (not probe()) 
+        table.insert("F");
+        assertNotEquals("f", table.getWord(a));
+        assertEquals("f", table.getWord(0));
 
         // Check if it rehashes correctly
+        int d = Math.abs("d".hashCode()) % 9;
         table.insert("D");
-        table.insert("E");
+        assertEquals("d", table.getWord(d));
     }
 
     @Test
-    public void testTableDelete() {
+    public void testTableDelete() throws Exception { // and probe() and rehash()
+        HashTable table = new HashTable(5);
 
+        for (int i = 0; i < 5; i++)
+            table.insert("a");
+        // check that delete() is case-insensitivie
+        int a = Math.abs("a".hashCode()) % 5;
+        table.delete("A");
+        table.delete("a");
+        assertEquals(3, table.getNumRepeats(a));
+        
+        // try deleting a String value not in the table
+        try {
+            table.delete("hello");
+        }
+        catch (NoSuchElementException e) {
+            // exception supposed to be thrown
+        }
+
+        // check if it rehashes correctly with too many deleted items
+        table.delete("a");
+        table.delete("a");
+        table.delete("a");
+        table.insert("b");
+        table.delete("b");
+        table.insert("c");
+        table.delete("c");
+        // enough numDelete; should rehash() at next insert() call
+        table.insert("f");
+        int f = Math.abs("f".hashCode()) % 5;
+        assertEquals(a, f); // should check that probe() leads to the same
+        assertEquals("f", table.getWord(f));
+    }
+
+    /** Test method for WordCount class (just wordCount()) */
+
+    @Test
+    public void testWordCount() {
+        WordCount wc = new WordCount();
+        wc.wordCount("Hello hi hello");
+
+    }
+
+    public static void main(String[] args) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < args.length; i++) {
+            builder.append(args[i]);
+        }
+        String str = builder.toString();
+        WordCount wc = new WordCount();
+        wc.wordCount(str);
     }
 }

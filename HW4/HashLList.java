@@ -1,3 +1,5 @@
+import java.util.NoSuchElementException;
+
 /**
  * A singly Linked List class for the HashTable class using separate chaining
  * @author Chaehyeon Kim
@@ -10,12 +12,6 @@ public class HashLList {
     public HashLList() {
         this.head = null;
         this.numItem = 0;
-    }
-
-    public String getWord() {
-        if (head == null)
-            return null;
-        return head.item;
     }
 
     public int getNumItem() {
@@ -43,22 +39,27 @@ public class HashLList {
             boolean nodeDeleted = false;
             String travItem = trav.item.toLowerCase(); // the item at trav
             String strLower = str.toLowerCase();
+            boolean returnThis = false;
             if (trav == head) {
                 if (travItem.equals(strLower)) {
                     head = trav.next;
                     nodeDeleted = true;
-                    return true; // empty but removed
+                    if (head == null)
+                        returnThis = true; // empty but removed
                 }
             }
-            while (trav.next != null || !nodeDeleted) {
+            while (!nodeDeleted && trav.next != null) {
                 if (travItem.equals(strLower)) {
                     trav.next = trav.next.next;
                     nodeDeleted = true;
                 }
                 trav = trav.next;
             }
-            numItem--;
-            return false; // array index didn't go from occupied to empty
+            if (!nodeDeleted)
+                throw new NoSuchElementException();
+            else
+                numItem--;
+            return returnThis; // array index didn't go from occupied to empty
         }
     }
 
