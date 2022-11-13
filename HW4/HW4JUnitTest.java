@@ -212,12 +212,5 @@ public class HW4JUnitTest {
         assertEquals("f", table.getWord(f));
     }
 
-    /** Test method for WordCount class (just wordCount()) */
-
-    @Test
-    public void testWordCount() {
-        WordCount wc = new WordCount();
-        wc.wordCount("Hello hi hello");
-
-    }
+    /** Testing for the wordCount method has been completed with the main method. */
 }
