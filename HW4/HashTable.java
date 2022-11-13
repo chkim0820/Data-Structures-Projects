@@ -69,6 +69,32 @@ public class HashTable {
     }
 
     /**
+     * Calculates the next prime number after i
+     * @param i int value that will be used to calculate the next prime number
+     * @return the next prime number after i
+     */
+    public int nextPrimeNumber(int i) {
+        int prime = i + 1; // increments until prime found
+        if (i >= 0) {
+            if (i == 0 || i == 1 || i == 2) // if input 1 or 2, the output is 2 and 3 respectively
+                return prime;
+            while (true) { // loop through until prime number found
+                boolean divided = false; // keeps track of whether prime can be divided by all the integers less than current value in prime and >= 2
+                int j = 2; // starts dividing from 2
+                while (j < prime && !divided) { // divides through all integers
+                    if (prime % j == 0)
+                        divided = true; // divided; not prime
+                    j++; // to next integer
+                }
+                if (prime == j && divided == false) // all not divided & is prime
+                    return prime; // end the loop
+                prime++;
+            }
+        }
+        return -1; // input value was less than 0
+    }
+
+    /**
      * Inserts a new value at the hash table at an appropriate index of the table
      * @param str the input String value
      */
@@ -110,10 +136,12 @@ public class HashTable {
         int index = (Math.abs(s.hashCode())) % tableSize; // h1
         int h2 = (Math.abs(s.hashCode())) % 13; // h2
         int i = 0; // for the while loop to not loop more than # tableSize
-        while (!s.equals(getWord(index)) && (i < tableSize) && (table[index] != null && !table[index].removed)) { // use h2 if original index full
+        while (!s.equals(getWord(index)) && (i <= tableSize) && (table[index] != null && !table[index].removed)) { // use h2 if original index full
             index = (index + h2) % tableSize;
             i++;
         }
+        if (i > tableSize)
+            return -1;
         return index;
     }
 
@@ -124,8 +152,8 @@ public class HashTable {
     private void rehash() {
         Entry[] temp = table; // temp variable storing the old table
         if ((numItem / tableSize) >= 1) { // rehash() called because numItem too big; enlarge the table
-            table = new Entry[tableSize * 2 - 1];
-            tableSize = tableSize * 2 - 1;
+            tableSize = nextPrimeNumber(tableSize);
+            table = new Entry[tableSize];
         }
         else // rehash() called because numDeleted too big; keep the current table size
             table = new Entry[tableSize];

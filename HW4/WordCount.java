@@ -11,7 +11,7 @@ public class WordCount {
      * Constructor for WordCount class
      */
     public WordCount() {
-        table = null;
+        table = new HashTable(0); // set at an arbitrary number; size will be readjusted anyway
     }
     
     /**
@@ -20,7 +20,7 @@ public class WordCount {
      */
     public void wordCount(String str) {
         String[] arr = str.split("\\P{Alpha}+"); // array containing str divided up to alphabetical sub-strings (words)
-        table = new HashTable(arr.length); // new hash table to input all the words from str in
+        table = new HashTable(table.nextPrimeNumber(arr.length)); // new hash table to input all the words from str in
         for (int i = 0; i < arr.length; i++) { // inserting the words from arr into the hash table
             table.insert(arr[i]);
         }

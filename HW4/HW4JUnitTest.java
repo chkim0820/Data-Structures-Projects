@@ -152,11 +152,11 @@ public class HW4JUnitTest {
             table.insert("A");
         assertEquals(3, table.getNumItems(i));
 
-        // Inserting a value 9 times at i; will rehash
-        int a = Math.abs("b".hashCode()) % 9;
-        for (int b = 0; b < 5; b++)
+        // Inserting a value 2 times at i
+        int a = Math.abs("b".hashCode()) % 5;
+        for (int b = 0; b < 2; b++)
             table.insert("B");
-        assertEquals(5, table.getNumItems(a));
+        assertEquals(2, table.getNumItems(a));
     }
 
     /**
@@ -172,6 +172,24 @@ public class HW4JUnitTest {
         // Checking if the word's case is lowered
         table.insert("A");
         assertEquals("a", table.getWord(Math.abs("a".hashCode()) % 5));
+    }
+
+    /**
+     * Test method for nextPrimeNumber()
+     */
+    @Test
+    public void testNextPrimeNumber() {
+        HashTable table = new HashTable(5);
+        // edge cases; inputs are 0, 1, or 2
+        assertEquals(1, table.nextPrimeNumber(0));
+        assertEquals(2, table.nextPrimeNumber(1));
+        assertEquals(3, table.nextPrimeNumber(2));
+        // more test cases
+        assertEquals(5, table.nextPrimeNumber(4));
+        assertEquals(7, table.nextPrimeNumber(5));
+        assertEquals(7, table.nextPrimeNumber(6));
+        assertEquals(11, table.nextPrimeNumber(10));
+        assertEquals(23, table.nextPrimeNumber(19));
     }
 
     /**
@@ -203,7 +221,7 @@ public class HW4JUnitTest {
         assertEquals("f", table.getWord(0));
 
         // Check if it rehashes correctly
-        int d = Math.abs("d".hashCode()) % 9;
+        int d = Math.abs("d".hashCode()) % 7;
         table.insert("D");
         assertEquals("d", table.getWord(d));
     }
