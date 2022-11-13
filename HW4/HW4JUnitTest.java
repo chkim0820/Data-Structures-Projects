@@ -115,11 +115,11 @@ public class HW4JUnitTest {
     /** HashTable Test Methods */
     
     @Test
-    public void testGetNumRepeats() {
+    public void testGetNumItems() {
         HashTable table = new HashTable(5);
         
         try {
-            table.getNumRepeats(1);
+            table.getNumItems(1);
         }
         catch (NoSuchElementException e) {
             // Exception supposed to be thrown
@@ -128,12 +128,12 @@ public class HW4JUnitTest {
         int i = Math.abs("a".hashCode()) % 5;
         for (int j = 0; j < 3; j++)
             table.insert("A");
-        assertEquals(3, table.getNumRepeats(i));
+        assertEquals(3, table.getNumItems(i));
 
         int a = Math.abs("b".hashCode()) % 9; // will rehash
         for (int b = 0; b < 5; b++)
             table.insert("B");
-        assertEquals(5, table.getNumRepeats(a));
+        assertEquals(5, table.getNumItems(a));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class HW4JUnitTest {
         int a = Math.abs("a".hashCode()) % 5;
         table.insert("A");
         table.insert("a");
-        assertEquals(2, table.getNumRepeats(a));
+        assertEquals(2, table.getNumItems(a));
 
         // more test cases
         int b = Math.abs("b".hashCode()) % 5;
@@ -187,7 +187,7 @@ public class HW4JUnitTest {
         int a = Math.abs("a".hashCode()) % 5;
         table.delete("A");
         table.delete("a");
-        assertEquals(3, table.getNumRepeats(a));
+        assertEquals(3, table.getNumItems(a));
         
         // try deleting a String value not in the table
         try {

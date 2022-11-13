@@ -16,19 +16,24 @@ public class WordCount {
     
     /**
      * Takes a string as an input and prints out all the words encountered in that input along with their number of occurrences
+     * @param str the string to be processed through this method
      */
     public void wordCount(String str) {
-        String[] arr = str.split("\\P{Alpha}+");
-        table = new HashTable(arr.length);
-        for (int i = 0; i < arr.length; i++) { // inserting the words (Strings) into the hash table
+        String[] arr = str.split("\\P{Alpha}+"); // array containing str divided up to alphabetical sub-strings (words)
+        table = new HashTable(arr.length); // new hash table to input all the words from str in
+        for (int i = 0; i < arr.length; i++) { // inserting the words from arr into the hash table
             table.insert(arr[i]);
         }
-        for (int j = 0; j < table.getTableSize(); j++) {
-            if (!table.isEmpty(j) && !table.getWord(j).isEmpty())
-                System.out.println("The word " + '"' + table.getWord(j) + '"' + " is repeated " + table.getNumRepeats(j) + " times.");
+        for (int j = 0; j < table.getTableSize(); j++) { // print out the words and their number of times repeated in str
+            if (!table.isEmpty(j) && !table.getWord(j).isEmpty()) // if hash table not empty at i or word is null
+                System.out.println("The word " + '"' + table.getWord(j) + '"' + " is repeated " + table.getNumItems(j) + " times.");
         }
     }
 
+    /**
+     * The main method for WordCount class
+     * @param args the input String array
+     */
     public static void main(String[] args) {
         // Testing duplicates in different cases
         WordCount wc = new WordCount();

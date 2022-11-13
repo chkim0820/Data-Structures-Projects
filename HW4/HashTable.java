@@ -12,7 +12,7 @@ public class HashTable {
     private int tableSize;
     /** Field storing the number of items stored in the table */
     private int numItem;
-    /** Field storing the number of deleted items; occupied to empty indeces */
+    /** Field storing the number of deleted items; from occupied to empty indeces */
     private int numDeleted;
 
     /**
@@ -26,56 +26,90 @@ public class HashTable {
         numDeleted = 0;
     }
 
+    /**
+     * Getter method for tableSize
+     * @return tableSize of this HashTable
+     */
     public int getTableSize() {
         return tableSize;
     }
 
+    /**
+     * Returns whether the table is empty at i index or not (for WordCount class)
+     * @param i index of the table that is checked
+     * @return whether the table is empty at i index or not
+     */
     public boolean isEmpty(int i) {
         return (table[i] == null);
     }
 
-    public int getNumRepeats(int index) {
+    /**
+     * Returns the number of items at each index
+     * @param index the index of the table
+     * @return the number of items at each index
+     * @throws NoSuchElementException thrown when the table at this index is empty
+     */
+    public int getNumItems(int index) throws NoSuchElementException {
         if (table[index] != null)
             return table[index].list.getNumItem();
         else
             throw new NoSuchElementException("The table at this index is empty.");
     }
 
+    /**
+     * The word (key) stored at the input index
+     * @param index the index of the table
+     * @return the word (key) stored at the input index
+     */
     public String getWord(int index) {
         if (table[index] != null)
             return table[index].key;
-        else
+        else // if table empty at index, return null to indicate no word/key stored
             return null;
     }
 
-    public void insert(String str) { // have to initialize entry when entering a new value
+    /**
+     * Inserts a new value at the hash table at an appropriate index of the table
+     * @param str the input String value
+     */
+    public void insert(String str) {
         if ((numItem / tableSize) >= 1 || ((2 * numDeleted) / tableSize) >= 1) // rehashing conditions
             rehash();
         int i = probe(str);
-        if (table[i] == null)
+        if (table[i] == null) // have to initialize entry when entering a new value
             table[i] = new Entry(str.toLowerCase());    
-        table[i].list.addLast(str); // insert all lower case String
+        table[i].list.addLast(str);
         numItem++;
     }
 
-    public void delete(String str) throws Exception { // rehash?
+    /**
+     * Deletes the input from the hash table
+     * @param str the string value of an item to be deleted
+     * @throws Exception thrown when there is no such String value stored in the table
+     */
+    public void delete(String str) throws NoSuchElementException {
         int i = probe(str);
-        if (table[i] != null) {
-            if (table[i].list.delete(str)) {
+        if (table[i] != null) { 
+            if (table[i].list.delete(str)) { // returns true if the list goes to null; table becomes empty at i
                 table[i].removed = true;
                 numDeleted++;
             }
             numItem--;
         }
+        else // there is no str in the table
+            throw new NoSuchElementException();
     }
 
-    // account for the possibility of more than one words ending up at the same index
-    // try to make every index be for unique words
+    /**
+     * Looks for an appropriate index for the input String value
+     * @param str input String value
+     * @return an appropriate index in the table for the input String value
+     */
     private int probe(String str) {
         String s = str.toLowerCase(); // all letters converted to lowercase for case-insensitive table
         int index = (Math.abs(s.hashCode())) % tableSize; // h1
         int h2 = (Math.abs(s.hashCode())) % 13; // h2
-        int i = 0;
+        int i = 0; // for the while loop to not loop more than # tableSize
         while (!s.equals(getWord(index)) && (i < tableSize) && (table[index] != null && !table[index].removed)) { // use h2 if original index full
             index = (index + h2) % tableSize;
             i++;
@@ -83,23 +117,26 @@ public class HashTable {
         return index;
     }
 
+    /**
+     * Rehashes the table accordingly when there's too many items in the table or
+     * when there is too many deleted items
+     */
     private void rehash() {
-        Entry[] temp = table;
-        if ((numItem / tableSize) >= 1) {
+        Entry[] temp = table; // temp variable storing the old table
+        if ((numItem / tableSize) >= 1) { // rehash() called because numItem too big; enlarge the table
             table = new Entry[tableSize * 2 - 1];
             tableSize = tableSize * 2 - 1;
         }
-        else
+        else // rehash() called because numDeleted too big; keep the current table size
             table = new Entry[tableSize];
         for (int i = 0; i < temp.length; i++) { // move values over to temp
             if (temp[i] != null) {
-                HashLList li = temp[i].list;
-                HashLList.LIterator it = li.iterator();
-                //int index = probe(temp[i].key);
+                HashLList li = temp[i].list; // linked list in the original table at i
+                HashLList.LIterator it = li.iterator(); // iterator for li
                 while (it.hasNext()) {
-                    String str = it.next();
-                    int index = probe(str);
-                    if (table[index] == null)
+                    String str = it.next(); // String value stored at node before pointer moves
+                    int index = probe(str); // new index for str in the new table
+                    if (table[index] == null) // create a new Entry if table null at index
                         table[index] = new Entry(str.toLowerCase());    
                     table[index].list.addLast(str); // insert all lower case String
                 }
@@ -111,10 +148,17 @@ public class HashTable {
      * A nested class for hash entries
      */
     private class Entry { // removed field not needed?
-        private String key; // needed?
+        /** A field storing the key */
+        private String key;
+        /** A field storing the list */
         private HashLList list;
+        /** A field storing whether this Entry is removed or not */
         private boolean removed;
 
+        /**
+         * Constructor for the private Entry class
+         * @param key key of this Entry
+         */
         private Entry (String key){
             this.key = key;
             list = new HashLList();
