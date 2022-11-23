@@ -1,0 +1,6 @@
+insertionSort: [18,7,6,3,3,2,2,1,0,-9]
+bubbleSort: [8,6,4,3,3,2,1,0,-1]
+shellSort: [9,8,6,3,2,0,0,-1,-7]
+quickSort: [18,7,6,4,3,1,1,0,-2]
+mergeSort: [9,8,7,5,3,2,1,1,0,-4]
+upgradedQuickSort: [12,9,8,7,6,1,0,0,-3,-5]
