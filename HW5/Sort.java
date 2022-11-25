@@ -14,22 +14,20 @@ public class Sort {
         if (arr.length > 1) {
             int i = 1;
             while (i < arr.length) {
-                int save = arr[i];
                 int findIndex = i - 1;
                 while (arr[findIndex] > arr[i] && findIndex > 0) {
                     findIndex--;
                 }
-                if (findIndex == i - 1  && arr[findIndex] <= arr[i]) // second condition is for arrays with length of 2
-                    i++;
-                else {
+                if (arr[findIndex] > arr[i]) {
+                    int save = arr[i];
                     int trav = i;
                     while (trav > findIndex) {
                         arr[trav] = arr[trav - 1];
                         trav--;
                     }
                     arr[findIndex] = save;
-                    i++;
                 }
+                i++;
             }
         }
     }
@@ -71,17 +69,34 @@ public class Sort {
      */
     public static void shellSort(int[] arr) {
         if (arr.length > 1) {
-            int i = (int)(Math.log(arr.length) / Math.log(2)) - 1;
-            int incr = incrFinder(i);
+            int input = (int)(Math.log(arr.length) / Math.log(2)) - 1;
+            int incr = hibbard(input);
             while (incr > 0) {
                 // insertion sort with incr as strides
-                
-                incr = incrFinder(i - 1);
+                int i = incr;
+                while (i < arr.length) {
+                    int j = i - incr;
+                    while (arr[j] > arr[i] && j > 0) {
+                        j = j - incr;
+                    } // found the correct index to insert
+                    if (arr[j] > arr[i]) {
+                        int save = arr[i];
+                        int trav = i;
+                        while (trav > j) {
+                            arr[trav] = arr[trav-incr];
+                            trav = trav - incr;
+                        }
+                        arr[j] = save;
+                    }
+                    i++;
+                }
+                input--;
+                incr = hibbard(input);
             }
         }
     }
 
-    private static int incrFinder(int i) {
+    private static int hibbard(int i) {
         return (int) Math.pow(2, i) - 1;
     }
 
