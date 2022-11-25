@@ -1,3 +1,5 @@
+import java.lang.Math;
+
 /**
  * Sort class for CSDS 233 HW 5
  * @author Chaehyeon Kim cxk445
@@ -9,7 +11,27 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void insertionSort(int[] arr) {
-
+        if (arr.length > 1) {
+            int i = 1;
+            while (i < arr.length) {
+                int save = arr[i];
+                int findIndex = i - 1;
+                while (arr[findIndex] > arr[i] && findIndex > 0) {
+                    findIndex--;
+                }
+                if (findIndex == i - 1  && arr[findIndex] <= arr[i]) // second condition is for arrays with length of 2
+                    i++;
+                else {
+                    int trav = i;
+                    while (trav > findIndex) {
+                        arr[trav] = arr[trav - 1];
+                        trav--;
+                    }
+                    arr[findIndex] = save;
+                    i++;
+                }
+            }
+        }
     }
 
     /**
@@ -17,7 +39,30 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void bubbleSort(int[] arr) {
+        if (arr.length > 1) {
+            int sorted = arr.length - 1; // the last index of unsorted region
+            while (sorted > 0) {
+                int i = 0;
+                while (i < sorted) {
+                    if (arr[i] > arr[i + 1])
+                        swap(arr, i, i + 1);
+                    i++;
+                }
+                sorted--;
+            }
+        }
+    }
 
+    /**
+     * A helper method for swapping values of two indeces in an array
+     * @param arr the input array to have values swapped
+     * @param i first index of array to be swapped
+     * @param j second index of array to be swapped
+     */
+    private static void swap(int[] arr, int i, int j) {
+        int save = arr[i];
+        arr[i] = arr[j];
+        arr[j] = save;
     }
 
     /**
@@ -25,7 +70,19 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void shellSort(int[] arr) {
+        if (arr.length > 1) {
+            int i = (int)(Math.log(arr.length) / Math.log(2)) - 1;
+            int incr = incrFinder(i);
+            while (incr > 0) {
+                // insertion sort with incr as strides
+                
+                incr = incrFinder(i - 1);
+            }
+        }
+    }
 
+    private static int incrFinder(int i) {
+        return (int) Math.pow(2, i) - 1;
     }
 
     /**
