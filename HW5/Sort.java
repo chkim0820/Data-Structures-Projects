@@ -202,9 +202,8 @@ public class Sort {
      * @param k the minimum number of elements a subarray can have before switching to insertion sort.
      */
     public static void upgradedQuickSort(int[] input, int d, int k) {
-        int depthLimit = (int)(Math.log(input.length) / Math.log(2));
         int depth = 0;
-        int whichSort = recUpgradedQuickSort(input, depth, depthLimit, k, 0, input.length - 1);
+        int whichSort = recUpgradedQuickSort(input, depth, d, k, 0, input.length - 1);
         if (whichSort > 0)
             mergeSort(input);
         else if (whichSort < 0)
@@ -213,17 +212,22 @@ public class Sort {
 
     private static int recUpgradedQuickSort(int[] arr, int depth, int depthLimit, int k, int left, int right) {
         // if subarray length is 1, return; base case
-        if (depth >= depthLimit)
-            return 1;
-        else if (left - right < k)
-            return -1;
-        else if (left >= right)
+        if (left >= right)
             return 0;
+        else if (depth >= depthLimit)
+            return 1;
+        else if ((right - left) + 1 < k)
+            return -1;
         int split = partition(arr, left, right); // partition the array into two subarrays
         depth++;
-        recUpgradedQuickSort(arr, depth, depthLimit, k, left, split); // left subarray
-        recUpgradedQuickSort(arr, depth, depthLimit, k, split + 1, right); // right subarray
-        return 0;
+        int s1 = recUpgradedQuickSort(arr, depth, depthLimit, k, left, split); // left subarray
+        int s2 = recUpgradedQuickSort(arr, depth, depthLimit, k, split + 1, right); // right subarray
+        if (s1 == 0 && s2 == 0)
+            return 0;
+        if (s1 > 0 || s2 > 0)
+            return 1;
+        else
+            return -1;
     }
 
     /**
