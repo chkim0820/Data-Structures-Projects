@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.Math;
+import java.util.Scanner;
 
 /**
  * Sort class for CSDS 233 HW 5
@@ -208,7 +211,11 @@ public class Sort {
      * @return an array of random integers of size n.
      */
     public static int[] generateRandomArray(int n) {
-        return null;
+        int[] arr = new int[n];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = (int)(Math.random() * 100);
+        }
+        return arr;
     }
 
     /**
@@ -216,6 +223,15 @@ public class Sort {
      * @param filepath a String input corresponding to the filepath of a .txt file.
      */
     public static void readCommands(String filepath) {
-
+        File file = new File(filepath);
+        try {
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                System.out.println(scanner.nextLine());
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
