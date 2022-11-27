@@ -109,9 +109,9 @@ public class Sort {
      * @return the last index of to-be-left array
      */
     private static int partition(int[] arr, int left, int right) { // return j (right pointer) location
+        int pivot = (arr[left] + arr[right] + arr[(left + right) / 2]) / 3; // take first, middle, last's median
         int i = left - 1; // pointer starting from the left
         int j = right + 1; // pointer starting from the right
-        int pivot = (arr[left] + arr[right] + arr[(left + right) / 2]) / 3; // take first, middle, last's median
         // loop through while i and j crosses while swapping values
         while (true) {
             do {
@@ -120,10 +120,10 @@ public class Sort {
             do {
                 j--;
             } while (arr[j] < pivot);
-            if (i >= j)
-                return j;
-            else
+            if (i < j)
                 swap(arr, i, j);
+            else
+                return j;
         }
     }
 
@@ -249,7 +249,7 @@ public class Sort {
         int[] arr = new int[n]; // a new array of size n
         // insert a random integer at each index of arr
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = (int)(Math.random() * n);
+            arr[i] = (int)(Math.random() * n * 10);
         }
         return arr;
     }

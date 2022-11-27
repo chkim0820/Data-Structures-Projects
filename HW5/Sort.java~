@@ -19,7 +19,7 @@ public class Sort {
             int save = arr[i]; // saves the value at i index
             int j; // for traversal while shifting over values
             // shift values until value at j-1 is smaller or equal to value at i
-            for (j = i; arr[j - 1] < save && j > 0; j--) {
+            for (j = i; j > 0 && arr[j - 1] < save; j--) {
                 arr[j] = arr[j - 1];
             }
             arr[j] = save; // insert the saved value at the appropriate index found in the loop above
@@ -98,7 +98,7 @@ public class Sort {
             return;
         int split = partition(arr, left, right); // partition the array into two subarrays
         recQuickSort(arr, left, split); // left subarray
-        recQuickSort(arr, split + 1, right); // right subarray
+        recQuickSort(arr, split, right); // right subarray
     }
 
     /**
