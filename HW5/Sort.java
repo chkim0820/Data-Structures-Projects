@@ -202,7 +202,8 @@ public class Sort {
      * @param k the minimum number of elements a subarray can have before switching to insertion sort.
      */
     public static void upgradedQuickSort(int[] input, int d, int k) {
-        int depth = 0;
+        int depth = 0; // keep track of depth
+        // return 1 if switching to merge sort; -1 if switching to insertion sort; 0 if already sorted
         int whichSort = recUpgradedQuickSort(input, depth, d, k, 0, input.length - 1);
         if (whichSort > 0)
             mergeSort(input);
@@ -214,19 +215,28 @@ public class Sort {
         // if subarray length is 1, return; base case
         if (left >= right)
             return 0;
+        // depth reachs the depth limit
         else if (depth >= depthLimit)
             return 1;
+        // subarray has fewer than k elements
         else if ((right - left) + 1 < k)
             return -1;
         int split = partition(arr, left, right); // partition the array into two subarrays
         depth++;
+        // keep track of whether subarrays need to be switched to other sorting methods
+        // check left subarray first
         int s1 = recUpgradedQuickSort(arr, depth, depthLimit, k, left, split); // left subarray
-        int s2 = recUpgradedQuickSort(arr, depth, depthLimit, k, split + 1, right); // right subarray
-        if (s1 == 0 && s2 == 0)
-            return 0;
-        if (s1 > 0 || s2 > 0)
+        if (s1 > 0) // left subarray reached depth limit; switch to merge sort
             return 1;
-        else
+        else if (s1 < 0) // left subarray has fewer than k elements; switch to insertion sort
+            return -1;
+        // then check right subarray
+        int s2 = recUpgradedQuickSort(arr, depth, depthLimit, k, split + 1, right); // right subarray
+        if (s1 == 0 && s2 == 0) // both left & right subarrays have been sorted
+            return 0;
+        if (s2 > 0) // one of the subarrays reached depth limit; switch to merge sort
+            return 1;
+        else // one of the subarrays have fewer than k elements; switch to insertion sort
             return -1;
     }
 
