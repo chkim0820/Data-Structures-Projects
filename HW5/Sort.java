@@ -19,7 +19,7 @@ public class Sort {
             int save = arr[i]; // saves the value at i index
             int j; // for traversal while shifting over values
             // shift values until value at j-1 is smaller or equal to value at i
-            for (j = i; arr[j - 1] > arr[i] && j > 0; j--) {
+            for (j = i; arr[j - 1] < save && j > 0; j--) {
                 arr[j] = arr[j - 1];
             }
             arr[j] = save; // insert the saved value at the appropriate index found in the loop above
@@ -35,7 +35,7 @@ public class Sort {
         for (int i = arr.length - 1; i > 0; i--) {
             // loop through array while swapping to move the biggest value of the unsorted region to the end
             for (int j = 0; j < i; j++) {
-                if (arr[j] > arr[j + 1]) // swap so the bigger value moves back
+                if (arr[j] < arr[j + 1]) // swap so the bigger value moves back
                     swap(arr, j, j + 1);
             }
         }
@@ -70,7 +70,7 @@ public class Sort {
                 int save = arr[i];
                 int j;
                 // shift values over until appropriate index to insert found
-                for (j = i; j > incr - 1 && save < arr[j - incr]; j = j - incr)
+                for (j = i; j > incr - 1 && save > arr[j - incr]; j = j - incr)
                     arr[j] = arr[j - incr];
                 arr[j] = save;
             }
@@ -116,10 +116,10 @@ public class Sort {
         while (true) {
             do {
                 i++;
-            } while (arr[i] < pivot);
+            } while (arr[i] > pivot);
             do {
                 j--;
-            } while (arr[j] > pivot);
+            } while (arr[j] < pivot);
             if (i >= j)
                 return j;
             else
@@ -168,7 +168,7 @@ public class Sort {
         int index = 0; // index of temp array
         // insert value of subarrays into the temp array until one of the subarray's pointers reach the end
         while (i < rightStart && j < rightEnd + 1) {
-            if (arr[i] < arr[j]) {
+            if (arr[i] > arr[j]) {
                 temp[index] = arr[i];
                 i++;
             }
