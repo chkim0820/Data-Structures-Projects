@@ -11,24 +11,15 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void insertionSort(int[] arr) {
-        if (arr.length > 1) {
-            int i = 1;
-            while (i < arr.length) {
-                int findIndex = i - 1;
-                while (arr[findIndex] > arr[i] && findIndex > 0) {
-                    findIndex--;
-                }
-                if (arr[findIndex] > arr[i]) {
-                    int save = arr[i];
-                    int trav = i;
-                    while (trav > findIndex) {
-                        arr[trav] = arr[trav - 1];
-                        trav--;
-                    }
-                    arr[findIndex] = save;
-                }
-                i++;
+        // loop through the whole array to find appropriate indeces for each values at i
+        for (int i = 1; i < arr.length; i++) {
+            int save = arr[i]; // saves the value at i index
+            int j; // for traversal while shifting over values
+            // shift values until value at j-1 is smaller or equal to value at i
+            for (j = i; arr[j - 1] > arr[i] && j > 0; j--) {
+                arr[j] = arr[j - 1];
             }
+            arr[j] = save; // insert the saved value at the appropriate index found in the loop above
         }
     }
 
@@ -37,16 +28,12 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void bubbleSort(int[] arr) {
-        if (arr.length > 1) {
-            int sorted = arr.length - 1; // the last index of unsorted region
-            while (sorted > 0) {
-                int i = 0;
-                while (i < sorted) {
-                    if (arr[i] > arr[i + 1])
-                        swap(arr, i, i + 1);
-                    i++;
-                }
-                sorted--;
+        // loop through the whole array; i start from end to align with end value of the nested loop
+        for (int i = arr.length - 1; i > 0; i--) {
+            // loop through array while swapping to move the biggest value of the unsorted region to the end
+            for (int j = 0; j < i; j++) {
+                if (arr[j] > arr[j + 1]) // swap so the bigger value moves back
+                    swap(arr, j, j + 1);
             }
         }
     }
@@ -68,36 +55,24 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void shellSort(int[] arr) {
-        if (arr.length > 1) {
-            int input = (int)(Math.log(arr.length) / Math.log(2)) - 1;
-            int incr = hibbard(input);
-            while (incr > 0) {
-                // insertion sort with incr as strides
-                int i = incr;
-                while (i < arr.length) {
-                    int j = i - incr;
-                    while (arr[j] > arr[i] && j > 0) {
-                        j = j - incr;
-                    } // found the correct index to insert
-                    if (arr[j] > arr[i]) {
-                        int save = arr[i];
-                        int trav = i;
-                        while (trav > j) {
-                            arr[trav] = arr[trav-incr];
-                            trav = trav - incr;
-                        }
-                        arr[j] = save;
-                    }
-                    i++;
-                }
-                input--;
-                incr = hibbard(input);
+        // find the ideal initial increment value; biggest number in Hibbard's sequence less than length of array
+        int incr = 1;
+        while (2 * incr <= arr.length)
+            incr = 2 * incr;
+        incr = incr - 1;
+        // loop through to sort with shell sort while stride is 1
+        while (incr >= 1) {
+            // insertion sort at i stride
+            for (int i = incr; i < arr.length; i++) {
+                int save = arr[i];
+                int j;
+                // shift values over until appropriate index to insert found
+                for (j = i; j > incr - 1 && save < arr[j - incr]; j = j - incr)
+                    arr[j] = arr[j - incr];
+                arr[j] = save;
             }
+            incr = incr / 2; // the next lower number in sequence to be incr
         }
-    }
-
-    private static int hibbard(int i) {
-        return (int) Math.pow(2, i) - 1;
     }
 
     /**
@@ -105,7 +80,48 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void quickSort(int[] arr) {
+        recQuickSort(arr, 0, arr.length - 1);
+    }
 
+    /**
+     * Helper recursive method for quickSort()
+     * @param arr array to be sorted recursively using quick sort
+     * @param left left (first) index of array
+     * @param right right (last) index of array
+     */
+    private static void recQuickSort(int[] arr, int left, int right) {
+        // if subarray length is 1, return; base case
+        if (left >= right)
+            return;
+        int split = partition(arr, left, right); // partition the array into two subarrays
+        recQuickSort(arr, left, split); // left subarray
+        recQuickSort(arr, split + 1, right); // right subarray
+    }
+
+    /**
+     * Helper method for quickSort() that sorts the array using pivot and returns the last index of to-be-left array
+     * @param arr array to be sorted and divided
+     * @param left left index of the array to be sorted
+     * @param right right index of the array to be sorted
+     * @return the last index of to-be-left array
+     */
+    private static int partition(int[] arr, int left, int right) { // return j (right pointer) location
+        int i = left - 1; // pointer starting from the left
+        int j = right + 1; // pointer starting from the right
+        int pivot = (arr[left] + arr[right] + arr[(left + right) / 2]) / 3; // take first, middle, last's median
+        // loop through while i and j crosses while swapping values
+        while (true) {
+            do {
+                i++;
+            } while (arr[i] < pivot);
+            do {
+                j--;
+            } while (arr[j] > pivot);
+            if (i >= j)
+                return j;
+            else
+                swap(arr, i, j);
+        }
     }
 
     /**
@@ -113,7 +129,67 @@ public class Sort {
      * @param arr an input array of integers.
      */
     public static void mergeSort(int[] arr) {
+        int[] temp = new int[arr.length]; // temp array for merge sort
+        recMergeSort(arr, temp, 0, arr.length - 1);
+    }
 
+    /**
+     * Helper method for mergeSort() that is called recursively
+     * @param arr array to be sorted
+     * @param temp temporary array for sorting
+     * @param left left (first) index of the array
+     * @param right right (last) index of the array
+     */
+    private static void recMergeSort(int[] arr, int[] temp, int left, int right) {
+        // base case: subarray length of 1
+        if (left >= right)
+            return;
+        int split = (left + right) / 2; // find the middle index of the array
+        recMergeSort(arr, temp, left, split); // left array
+        recMergeSort(arr, temp, split + 1, right); // right array
+        merge(arr, temp, left, split, split + 1, right); // merge left and right array
+    }
+
+    /**
+     * Helper method for mergeSort() that merges arrays
+     * @param arr array to be sorted with merge sort method
+     * @param temp temporary array
+     * @param leftStart index at the start of the left array
+     * @param leftEnd index at the end of the left array
+     * @param rightStart index at the start of the right array
+     * @param rightEnd index at thte end of the right array
+     */
+    private static void merge(int[] arr, int[] temp, int leftStart, int leftEnd, int rightStart, int rightEnd) {
+        int i = leftStart; // pointer for left array
+        int j = rightStart; // pointer for right array
+        int index = 0; // index of temp array
+        // insert value of subarrays into the temp array until one of the subarray's pointers reach the end
+        while (i < rightStart && j < rightEnd + 1) {
+            if (arr[i] < arr[j]) {
+                temp[index] = arr[i];
+                i++;
+            }
+            else {
+                temp[index] = arr[j];
+                j++;
+            }
+            index++;
+        }
+        // insert already-sorted values of subarray if end not reached
+        while (i < rightStart) {
+            temp[index] = arr[i];
+            i++;
+            index++;
+        }
+        while (j < rightEnd + 1) {
+            temp[index] = arr[j];
+            j++;
+            index++;
+        }
+        // move values in temp array back to arr
+        for (int move = 0; move < arr.length; move++) {
+            arr[move] = temp[move];
+        }
     }
 
     /**
@@ -123,7 +199,7 @@ public class Sort {
      * @param k the minimum number of elements a subarray can have before switching to insertion sort.
      */
     public static void upgradedQuickSort(int[] input, int d, int k) {
-
+        
     }
 
     /**
