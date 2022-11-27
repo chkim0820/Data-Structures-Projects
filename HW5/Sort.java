@@ -202,7 +202,28 @@ public class Sort {
      * @param k the minimum number of elements a subarray can have before switching to insertion sort.
      */
     public static void upgradedQuickSort(int[] input, int d, int k) {
-        
+        int depthLimit = (int)(Math.log(input.length) / Math.log(2));
+        int depth = 0;
+        int whichSort = recUpgradedQuickSort(input, depth, depthLimit, k, 0, input.length - 1);
+        if (whichSort > 0)
+            mergeSort(input);
+        else if (whichSort < 0)
+            insertionSort(input);
+    }
+
+    private static int recUpgradedQuickSort(int[] arr, int depth, int depthLimit, int k, int left, int right) {
+        // if subarray length is 1, return; base case
+        if (depth >= depthLimit)
+            return 1;
+        else if (left - right < k)
+            return -1;
+        else if (left >= right)
+            return 0;
+        int split = partition(arr, left, right); // partition the array into two subarrays
+        depth++;
+        recUpgradedQuickSort(arr, depth, depthLimit, k, left, split); // left subarray
+        recUpgradedQuickSort(arr, depth, depthLimit, k, split + 1, right); // right subarray
+        return 0;
     }
 
     /**
@@ -211,7 +232,8 @@ public class Sort {
      * @return an array of random integers of size n.
      */
     public static int[] generateRandomArray(int n) {
-        int[] arr = new int[n];
+        int[] arr = new int[n]; // a new array of size n
+        // insert a random integer at each index of arr
         for (int i = 0; i < arr.length; i++) {
             arr[i] = (int)(Math.random() * 100);
         }
@@ -223,13 +245,14 @@ public class Sort {
      * @param filepath a String input corresponding to the filepath of a .txt file.
      */
     public static void readCommands(String filepath) {
-        File file = new File(filepath);
+        File file = new File(filepath); // Java File class object to store file of the input filepath
         try {
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(file); // Java Scanner to scan through the file
+            // while there's contents in the file, print them out
             while (scanner.hasNextLine()) {
                 System.out.println(scanner.nextLine());
             }
-            scanner.close();
+            scanner.close(); // close scanner
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
