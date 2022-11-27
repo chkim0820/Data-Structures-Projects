@@ -97,8 +97,16 @@ public class Sort {
         if (left >= right)
             return;
         int split = partition(arr, left, right); // partition the array into two subarrays
-        recQuickSort(arr, left, split); // left subarray
-        recQuickSort(arr, split, right); // right subarray
+        // left subarray
+        if (right == split) // if recursion call repeated, decrement split by 1
+            recQuickSort(arr, left, split - 1);
+        else
+            recQuickSort(arr, left, split);
+        // right subarray
+        if (left == split) // if recursion call repeated, increment split by 1
+            recQuickSort(arr, split + 1, right);
+        else
+            recQuickSort(arr, split, right);
     }
 
     /**

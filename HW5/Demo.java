@@ -120,5 +120,5 @@ public class Demo {
         Sort.upgradedQuickSort(arr, 3, 3);
         time = System.nanoTime() - time;
         System.out.printf("Upgraded quick sort time: %1d\n", time);
-        }
+    }
 }
