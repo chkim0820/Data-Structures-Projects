@@ -277,10 +277,18 @@ public class Sort {
                 String[] arr = command.split("\\p{Space}+");
                 String sortType = arr[0];
                 // turn String into array and perform method accordingly
-                String[] temp = arr[1].split("\\P{Digit}+");
+                String[] temp = arr[1].split(",");
                 int[] sortedArray = new int[temp.length];
-                for (int i = 0; i < temp.length; i++)
-                    sortedArray[i] = Integer.parseInt(temp[i]);
+                for (int i = 0; i < temp.length; i++) {
+                    String num = temp[i];
+                    StringBuilder builder = new StringBuilder();
+                    for (int j = 0; j < num.length(); j++) {
+                        if (num.charAt(i) != '[' || num.charAt(i) != ']')
+                            builder.append(num.charAt(i));
+                        num = builder.toString();
+                    }
+                    sortedArray[i] = Integer.parseInt(num);
+                }
                 // if statements to figure out which sorting method to use & print out accordingly
                 if (sortType.equals("insertionSort:")) {
                     insertionSort(sortedArray);
