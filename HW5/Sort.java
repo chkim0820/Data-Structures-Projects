@@ -269,6 +269,7 @@ public class Sort {
      */
     public static void readCommands(String filepath) {
         File file = new File(filepath); // Java File class object to store file of the input filepath
+
         try {
             Scanner scanner = new Scanner(file); // Java Scanner to scan through the file
             // while there's contents in the file, print them out
@@ -276,46 +277,42 @@ public class Sort {
                 String command = scanner.nextLine();
                 String[] arr = command.split("\\p{Space}+");
                 String sortType = arr[0];
+
                 // turn String into array and perform method accordingly
-                String[] temp = arr[1].split(",");
-                int[] sortedArray = new int[temp.length];
-                for (int i = 0; i < temp.length; i++) {
-                    String num = temp[i];
-                    StringBuilder builder = new StringBuilder();
-                    for (int j = 0; j < num.length(); j++) {
-                        if (num.charAt(i) != '[' || num.charAt(i) != ']')
-                            builder.append(num.charAt(i));
-                        num = builder.toString();
-                    }
-                    sortedArray[i] = Integer.parseInt(num);
+                String[] temp = arr[1].split("[^-0123456789]");
+                int[] sortedArray = new int[temp.length - 1];
+                for (int i = 1; i < temp.length; i++) {
+                        sortedArray[i - 1] = Integer.parseInt(temp[i]);
                 }
+
                 // if statements to figure out which sorting method to use & print out accordingly
                 if (sortType.equals("insertionSort:")) {
                     insertionSort(sortedArray);
-                    System.out.printf("insertionSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("insertionSort: " + Arrays.toString(sortedArray));
                 }
                 else if (sortType.equals("bubbleSort:")) {
                     bubbleSort(sortedArray);
-                    System.out.printf("bubbleSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("bubbleSort: " + Arrays.toString(sortedArray));
                 }
                 else if (sortType.equals("shellSort:")) {
                     shellSort(sortedArray);
-                    System.out.printf("shellSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("shellSort: " + Arrays.toString(sortedArray));
                 }
                 else if (sortType.equals("quickSort:")) {
                     quickSort(sortedArray);
-                    System.out.printf("quickSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("quickSort: " + Arrays.toString(sortedArray));
                 }
                 else if (sortType.equals("mergeSort:")) {
                     mergeSort(sortedArray);
-                    System.out.printf("mergeSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("mergeSort: " + Arrays.toString(sortedArray));
                 }
                 else if (sortType.equals("upgradedQuickSort:")) {
                     upgradedQuickSort(sortedArray, (int)(Math.log(arr.length) / Math.log(2)), sortedArray.length / 4);
-                    System.out.printf("upgradedQuickSort: %1d\n", Arrays.toString(sortedArray));
+                    System.out.println("upgradedQuickSort: " + Arrays.toString(sortedArray));
                 }                
             }
             scanner.close(); // close scanner
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
