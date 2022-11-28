@@ -276,39 +276,39 @@ public class Sort {
             while (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
                 if (command.charAt(0) != ' ') {
-                    String[] arr = command.split(":");
+                    String[] arr = command.split("[:\\[\\] ]");
                     String sortType = arr[0];
 
                     // if statements to figure out which sorting method to use & print out accordingly
                     if (sortType.equals("insertionSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        insertionSort(sortedArray);
-                        System.out.println("insertionSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        insertionSort(array);
+                        System.out.println("insertionSort: " + Arrays.toString(array));
                     }
                     else if (sortType.equals("bubbleSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        bubbleSort(sortedArray);
-                        System.out.println("bubbleSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        bubbleSort(array);
+                        System.out.println("bubbleSort: " + Arrays.toString(array));
                     }
                     else if (sortType.equals("shellSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        shellSort(sortedArray);
-                        System.out.println("shellSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        shellSort(array);
+                        System.out.println("shellSort: " + Arrays.toString(array));
                     }
                     else if (sortType.equals("quickSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        quickSort(sortedArray);
-                        System.out.println("quickSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        quickSort(array);
+                        System.out.println("quickSort: " + Arrays.toString(array));
                     }
                     else if (sortType.equals("mergeSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        mergeSort(sortedArray);
-                        System.out.println("mergeSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        mergeSort(array);
+                        System.out.println("mergeSort: " + Arrays.toString(array));
                     }
                     else if (sortType.equals("upgradedQuickSort")) {
-                        int[] sortedArray = toArray(arr[1]);
-                        upgradedQuickSort(sortedArray, (int)(Math.log(arr.length) / Math.log(2)), sortedArray.length / 4);
-                        System.out.println("upgradedQuickSort: " + Arrays.toString(sortedArray));
+                        int[] array = toArray(arr[arr.length - 1]);
+                        upgradedQuickSort(array, (int)(Math.log(arr.length) / Math.log(2)), array.length / 4);
+                        System.out.println("upgradedQuickSort: " + Arrays.toString(array));
                     }         
                 }       
             }
@@ -321,11 +321,11 @@ public class Sort {
 
     private static int[] toArray(String str) {
         // turn String into array and perform method accordingly
-        String[] temp = str.split("[\\[\\],]");
-        int[] sortedArray = new int[temp.length - 1];
-        for (int i = 1; i < temp.length; i++) {
-                sortedArray[i - 1] = Integer.parseInt(temp[i]);
+        String[] temp = str.split("[^-0123456789]");
+        int[] arr = new int[temp.length];
+        for (int i = 0; i < temp.length; i++) {
+            arr[i] = Integer.parseInt(temp[i]);
         }
-        return sortedArray;
+        return arr;
     }
 }
