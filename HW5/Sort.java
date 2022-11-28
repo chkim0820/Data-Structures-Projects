@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.Math;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -272,7 +273,39 @@ public class Sort {
             Scanner scanner = new Scanner(file); // Java Scanner to scan through the file
             // while there's contents in the file, print them out
             while (scanner.hasNextLine()) {
-                System.out.println(scanner.nextLine());
+                String command = scanner.nextLine();
+                String[] arr = command.split("\\p{Space}+");
+                String sortType = arr[0];
+                // turn String into array and perform method accordingly
+                String[] temp = arr[1].split("\\P{Digit}+");
+                int[] sortedArray = new int[temp.length];
+                for (int i = 0; i < temp.length; i++)
+                    sortedArray[i] = Integer.parseInt(temp[i]);
+                // if statements to figure out which sorting method to use & print out accordingly
+                if (sortType.equals("insertionSort:")) {
+                    insertionSort(sortedArray);
+                    System.out.printf("insertionSort: %1d\n", Arrays.toString(sortedArray));
+                }
+                else if (sortType.equals("bubbleSort:")) {
+                    bubbleSort(sortedArray);
+                    System.out.printf("bubbleSort: %1d\n", Arrays.toString(sortedArray));
+                }
+                else if (sortType.equals("shellSort:")) {
+                    shellSort(sortedArray);
+                    System.out.printf("shellSort: %1d\n", Arrays.toString(sortedArray));
+                }
+                else if (sortType.equals("quickSort:")) {
+                    quickSort(sortedArray);
+                    System.out.printf("quickSort: %1d\n", Arrays.toString(sortedArray));
+                }
+                else if (sortType.equals("mergeSort:")) {
+                    mergeSort(sortedArray);
+                    System.out.printf("mergeSort: %1d\n", Arrays.toString(sortedArray));
+                }
+                else if (sortType.equals("upgradedQuickSort:")) {
+                    upgradedQuickSort(sortedArray, (int)(Math.log(arr.length) / Math.log(2)), sortedArray.length / 4);
+                    System.out.printf("upgradedQuickSort: %1d\n", Arrays.toString(sortedArray));
+                }                
             }
             scanner.close(); // close scanner
         } catch (FileNotFoundException e) {
