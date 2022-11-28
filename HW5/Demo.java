@@ -121,7 +121,6 @@ public class Demo {
         System.out.printf("Merge sort time: %1d\n", time);
 
         // Upgraded quick sort
-        depthLimit = (int)(Math.log(arr.length) / Math.log(2));
         time = System.nanoTime();
         Sort.upgradedQuickSort(arr, depthLimit, arr.length / 4);
         time = System.nanoTime() - time;
@@ -177,7 +176,6 @@ public class Demo {
 
         // Upgraded quick sort
         arr = reverseSortedArray;
-        depthLimit = (int)(Math.log(arr.length) / Math.log(2));
         time = System.nanoTime();
         Sort.upgradedQuickSort(arr, depthLimit, arr.length / 4);
         time = System.nanoTime() - time;
