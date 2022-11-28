@@ -173,7 +173,7 @@ public class Sort {
     private static void merge(int[] arr, int[] temp, int leftStart, int leftEnd, int rightStart, int rightEnd) {
         int i = leftStart; // pointer for left array
         int j = rightStart; // pointer for right array
-        int index = 0; // index of temp array
+        int index = leftStart; // index of temp array
         // insert value of subarrays into the temp array until one of the subarray's pointers reach the end
         while (i < rightStart && j < rightEnd + 1) {
             if (arr[i] > arr[j]) {
@@ -198,7 +198,7 @@ public class Sort {
             index++;
         }
         // move values in temp array back to arr
-        for (int move = 0; move < arr.length; move++) {
+        for (int move = leftStart; move < rightEnd + 1; move++) {
             arr[move] = temp[move];
         }
     }

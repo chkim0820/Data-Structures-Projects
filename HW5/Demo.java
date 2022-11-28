@@ -168,7 +168,7 @@ public class Demo {
         Sort.mergeSort(arr);
         time = System.nanoTime() - time;
         System.out.printf("Merge sort time: %1d\n", time);
-        
+
         // Upgraded quick sort
         arr = reverseSortedArray;
         time = System.nanoTime();
