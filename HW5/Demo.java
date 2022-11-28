@@ -6,8 +6,12 @@ import java.util.Arrays;
  */
 public class Demo {
 
+    /**
+     * The main method to carry out different sorting methods of arrays with input size.
+     * @param args size of the array.
+     */
     public static void main(String[] args){
-        int size = Integer.parseInt(args[0]);
+        int size = Integer.parseInt(args[0]); // the size of the array
         System.out.printf("Results for arrays of size %d\n", size);
 
         /*

@@ -220,6 +220,16 @@ public class Sort {
             insertionSort(input);
     }
 
+    /**
+     * Helper method for upgradedQuickSort()
+     * @param arr an input array of integers.
+     * @param depth current depth.
+     * @param depthLimit the depth limit.
+     * @param k the minimum number of elements a subarray can have before switching to insertion sort.
+     * @param left left (first) index of current subarray.
+     * @param right right (last) index of current subarray.
+     * @return return when the current subarray's length is 1.
+     */
     private static int recUpgradedQuickSort(int[] arr, int depth, int depthLimit, int k, int left, int right) {
         // if subarray length is 1, return; base case
         if (left >= right)
@@ -274,10 +284,12 @@ public class Sort {
             Scanner scanner = new Scanner(file); // Java Scanner to scan through the file
             // while there's contents in the file, print them out
             while (scanner.hasNextLine()) {
+                // The current line of the file
                 String command = scanner.nextLine();
+                // Safety feature for empty lines
                 if (command.charAt(0) != ' ') {
-                    String[] arr = command.split("[:\\[\\] ]");
-                    String sortType = arr[0];
+                    String[] arr = command.split("[:\\[\\] ]"); // Split the command line into arrays with ':', '[', ']', ' ' as dividers
+                    String sortType = arr[0]; // the first chunk of line indicates the sort type
 
                     // if statements to figure out which sorting method to use & print out accordingly
                     if (sortType.equals("insertionSort")) {
@@ -319,10 +331,15 @@ public class Sort {
         }
     }
 
+    /**
+     * Helper method for readCommands() that turns a string of int[] back into int[]
+     * @param str a string of int[]
+     * @return the input string converted back to int[]
+     */
     private static int[] toArray(String str) {
         // turn String into array and perform method accordingly
-        String[] temp = str.split("[^-0123456789]");
-        int[] arr = new int[temp.length];
+        String[] temp = str.split("[^-0123456789]"); // split the string into numbers
+        int[] arr = new int[temp.length]; // array of int to be returned
         for (int i = 0; i < temp.length; i++) {
             arr[i] = Integer.parseInt(temp[i]);
         }
