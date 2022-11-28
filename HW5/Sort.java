@@ -275,46 +275,57 @@ public class Sort {
             // while there's contents in the file, print them out
             while (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
-                String[] arr = command.split("\\p{Space}+");
-                String sortType = arr[0];
+                if (command.charAt(0) != ' ') {
+                    String[] arr = command.split(":");
+                    String sortType = arr[0];
 
-                // turn String into array and perform method accordingly
-                String[] temp = arr[1].split("[^-0123456789]");
-                int[] sortedArray = new int[temp.length - 1];
-                for (int i = 1; i < temp.length; i++) {
-                        sortedArray[i - 1] = Integer.parseInt(temp[i]);
-                }
-
-                // if statements to figure out which sorting method to use & print out accordingly
-                if (sortType.equals("insertionSort:")) {
-                    insertionSort(sortedArray);
-                    System.out.println("insertionSort: " + Arrays.toString(sortedArray));
-                }
-                else if (sortType.equals("bubbleSort:")) {
-                    bubbleSort(sortedArray);
-                    System.out.println("bubbleSort: " + Arrays.toString(sortedArray));
-                }
-                else if (sortType.equals("shellSort:")) {
-                    shellSort(sortedArray);
-                    System.out.println("shellSort: " + Arrays.toString(sortedArray));
-                }
-                else if (sortType.equals("quickSort:")) {
-                    quickSort(sortedArray);
-                    System.out.println("quickSort: " + Arrays.toString(sortedArray));
-                }
-                else if (sortType.equals("mergeSort:")) {
-                    mergeSort(sortedArray);
-                    System.out.println("mergeSort: " + Arrays.toString(sortedArray));
-                }
-                else if (sortType.equals("upgradedQuickSort:")) {
-                    upgradedQuickSort(sortedArray, (int)(Math.log(arr.length) / Math.log(2)), sortedArray.length / 4);
-                    System.out.println("upgradedQuickSort: " + Arrays.toString(sortedArray));
-                }                
+                    // if statements to figure out which sorting method to use & print out accordingly
+                    if (sortType.equals("insertionSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        insertionSort(sortedArray);
+                        System.out.println("insertionSort: " + Arrays.toString(sortedArray));
+                    }
+                    else if (sortType.equals("bubbleSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        bubbleSort(sortedArray);
+                        System.out.println("bubbleSort: " + Arrays.toString(sortedArray));
+                    }
+                    else if (sortType.equals("shellSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        shellSort(sortedArray);
+                        System.out.println("shellSort: " + Arrays.toString(sortedArray));
+                    }
+                    else if (sortType.equals("quickSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        quickSort(sortedArray);
+                        System.out.println("quickSort: " + Arrays.toString(sortedArray));
+                    }
+                    else if (sortType.equals("mergeSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        mergeSort(sortedArray);
+                        System.out.println("mergeSort: " + Arrays.toString(sortedArray));
+                    }
+                    else if (sortType.equals("upgradedQuickSort")) {
+                        int[] sortedArray = toArray(arr[1]);
+                        upgradedQuickSort(sortedArray, (int)(Math.log(arr.length) / Math.log(2)), sortedArray.length / 4);
+                        System.out.println("upgradedQuickSort: " + Arrays.toString(sortedArray));
+                    }         
+                }       
             }
             scanner.close(); // close scanner
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    private static int[] toArray(String str) {
+        // turn String into array and perform method accordingly
+        String[] temp = str.split("[\\[\\],]");
+        int[] sortedArray = new int[temp.length - 1];
+        for (int i = 1; i < temp.length; i++) {
+                sortedArray[i - 1] = Integer.parseInt(temp[i]);
+        }
+        return sortedArray;
     }
 }
