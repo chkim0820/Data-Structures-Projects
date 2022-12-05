@@ -1,8 +1,20 @@
+import java.util.LinkedList;
+
 /**
  * Graph class for CSDS233 HW 6
  * @author Chaehyeon Kim cxk445
  */
 public class Graph {
+
+    private Vertex[] vertices;
+    private int numVertices;
+    private int maxNum;
+
+    public Graph(int max) {
+        vertices = new Vertex[max];
+        maxNum = max;
+        numVertices = 0;
+    }
 
     /** Constructing undirected, unweighted graphs */
 
@@ -111,5 +123,24 @@ public class Graph {
      */
     public String[] secondShortestPath(String from, String to) {
         return null;
+    }
+
+    /** 
+     * Vertex class; a private, nested class of Graph class
+     */
+    private class Vertex {
+        private String name;
+        private LinkedList<Edge> edges;
+        private Vertex parent;
+        private boolean encountered;
+        private int cost;
+    }
+
+    /**
+     * Edge class; a private, nested class of Graph class
+     */
+    private class Edge {
+        private int endNode;
+        private int cost;
     }
 }
