@@ -2,6 +2,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.lang.model.util.ElementScanner6;
+
 /**
  * Graph class for CSDS233 HW 6
  * @author Chaehyeon Kim cxk445
@@ -187,49 +189,46 @@ public class Graph {
         // find the from node
         int fromIndex = -1;
         int toIndex = -1;
-        for (int i = 0; i < maxNum; i++) {
+        for (int i = 0; i < maxNum; i++) { // add a separate node finder helper method
             if (vertices[i].name.equals(from))
                 fromIndex = i;
-            else if (vertices[i].name.equals(to))
+            if (vertices[i].name.equals(to))
                 toIndex = i;
-        }
+        } // edge case: when from and to equal or diff. number of nodes in the graph
         // if from and to nodes found, start depth-first search
         if (fromIndex != -1 && toIndex != -1) {
-            String[] path = null;
-            int index = 0;
+            String[] path = new String[numVertices];;
+            int index = 1;
             if (neighborOrder.toLowerCase().equals("alphabetical")) { // consider edges from front
-                path = new String[numVertices];
-                return recursiveDFS(fromIndex, index, path);
+                vertices[fromIndex].encountered = true;
+                path[0] = vertices[fromIndex].name;
+                recursiveDFS(fromIndex, toIndex, index, path);
+                return path;
             }
             else if (neighborOrder.toLowerCase().equals("reverse")) { // consider edges from end
-                path = new String[numVertices];
-                return reverse(recursiveDFS(fromIndex, index, path));
+                vertices[fromIndex].encountered = true;
+                path[0] = vertices[fromIndex].name;
+                recursiveDFS(fromIndex, toIndex, index, path);
+                return reverse(path); //sort()?
             }
-            return path;
         }
         return null;
     }
 
-    private String[] recursiveDFS(int nodeIndex, int start, String[] path) {
-        Vertex node = vertices[nodeIndex];
-        if (node.encountered == true) {
-            return null; // fix later
-        }
-        Iterator<Edge> it = vertices[nodeIndex].edges.iterator();
+    private void recursiveDFS(int fromIndex, int toIndex, int index, String[] path) {
+        //vertices[fromIndex].encountered = true;
+        Iterator<Edge> it = vertices[fromIndex].edges.iterator();
         while (it.hasNext()) { // iterate through all edges of from node
-            String[] temp = null;
             Edge edge = it.next();
-            if (vertices[edge.endNode].encountered == false)
-                temp = recursiveDFS(edge.endNode, start, temp);
-            if (temp != null) {
-                for (int i = 0; i < temp.length; i++) {
-                    start++;
-                    path[start] = temp[i];
-                }
+            if (vertices[edge.endNode].encountered == false) {
+                path[index] = vertices[edge.endNode].name;
+                index++;
+                vertices[edge.endNode].encountered = true;
+                if (edge.endNode == toIndex)
+                    break;
+                recursiveDFS(edge.endNode, toIndex, index, path);
             }
         }
-
-        return null;
     }
 
     private String[] reverse(String[] array) {
