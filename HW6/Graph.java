@@ -1,8 +1,7 @@
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import javax.lang.model.util.ElementScanner6;
+import java.util.PriorityQueue;
 
 /**
  * Graph class for CSDS233 HW 6
@@ -18,6 +17,19 @@ public class Graph {
         vertices = new Vertex[max];
         numVertices = 0;
         maxNum = max;
+    }
+
+    /**
+     * Searches for a vertex with the input string as its name
+     * @param vertexName the name of the vertex searched
+     * @return the index of the vertex with the input name
+     */
+    private int search(String vertexName) {
+        for (int i = 0; i < maxNum; i++) {
+            if (vertexName.equals(vertices[i].name))
+                return i;
+        }
+        return -1;
     }
 
     /** Constructing undirected, unweighted graphs */
@@ -185,7 +197,7 @@ public class Graph {
      * @param neighborOrder The order in which neighbors are considered; can be alphabetical or reverse
      * @return The result (the path or a list of node names, of depth-first search between nodes from and to). Return an empty array if no path exists.
      */
-    public String[] DFS(String from, String to, String neighborOrder) {
+    public String[] DFS(String from, String to, String neighborOrder) { 
         // find the from node
         int fromIndex = -1;
         int toIndex = -1;
@@ -250,7 +262,51 @@ public class Graph {
      * @return the path or a list of node names of breadth-first search between nodes from and to
      */
     public String[] BFS(String from, String to, String neighborOrder) {
+        int fromIndex = search(from);
+        int toIndex = search(to);
+        if (fromIndex != -1 && toIndex != -1) {
+            String[] temp = new String[numVertices];
+            if (neighborOrder.toLowerCase().equals("alphabetical")) {
+                int numPath = BFSHelper(fromIndex, toIndex, temp);
+                String[] path = new String[numPath];
+                for (int i = 0; i < numPath; i++) {
+                    path[i] = temp[i];
+                }
+                return path;
+            }
+            else if (neighborOrder.toLowerCase().equals("reverse")) {
+                int numPath = BFSHelper(fromIndex, toIndex, temp);
+                String[] path = new String[numPath];
+                for (int i = 0; i < numPath; i++) {
+                    path[i] = temp[i];
+                }
+                return reverse(path);
+            }
+        }
         return null;
+    }
+
+    private int BFSHelper(int fromIndex, int toIndex, String[] path) {
+        int i = 0;
+        GraphQueue queue = new GraphQueue();
+        // add the first vertex
+        queue.add(vertices[fromIndex]);
+        Vertex removed = queue.remove();
+        while (i < numVertices && !removed.equals(vertices[toIndex])) { // or '!='?
+            // add all edges to start
+            Iterator<Edge> it = removed.edges.iterator();
+            while (it.hasNext()) {
+                Vertex next = vertices[it.next().endNode];
+                if (next.encountered == false) {
+                    queue.add(next);
+                    next.encountered = true;
+                }
+            }
+            removed = queue.remove();
+            path[i] = removed.name;
+            i++;
+        }
+        return i;
     }
 
     /**
@@ -260,18 +316,75 @@ public class Graph {
      * @return the shortest path from node from to node to; only return one in case of multiple equivalent results
      */
     public String[] shortestPath(String from, String to) {
-        return null;
+        return BFS(from, to, "alphabetical");
     }
 
     /**
      * Returns the second shortest path between nodes from and to
      * @param from the starting node when finding the second shortest path
      * @param to the ending node when finding the second shortest path
-     * @return the second shortest path between nodes from and too; only return one in case of multiple equivalent results
+     * @return the second shortest path between nodes from and to; only return one in case of multiple equivalent results
      */
     public String[] secondShortestPath(String from, String to) {
+        int fromIndex = search(from);
+        int toIndex = search(to);
+        if (fromIndex != -1 && toIndex != -1) {
+            boolean alrEncountered = false;
+            GraphQueue queue = new GraphQueue();
+            queue.add(vertices[fromIndex]);
+            int i = 1;
+            // from vertex initializations
+            Vertex removed = queue.remove();
+            removed.encountered = true;
+            removed.parent = null;
+            removed.cost = 0;
+            while (removed.equals(vertices[toIndex]) && alrEncountered == true) { // path found
+                Iterator<Edge> it = removed.edges.iterator();
+                while (it.hasNext()) {
+                    Vertex neighbor = vertices[it.next().endNode];
+                    queue.add(neighbor);
+                    neighbor.encountered = true;
+                    neighbor.parent = removed;
+                    neighbor.cost = i;
+                }
+                removed = queue.remove();
+                i++;
+                if (removed.equals(vertices[toIndex]))
+                    alrEncountered = true;
+            } // removed == destination when loop exited
+            String[] path = new String[i + 1];
+            path[i] = removed.name;
+            for (int j = i - 1; j >= 0; j--) {
+                path[j] = removed.parent.name;
+                removed = removed.parent;
+            }
+            return path;
+        }
         return null;
     }
+
+    /** BFS improved?
+     * 
+     * int fromIndex = search(from);
+        int toIndex = search(to);
+        String[] path = new String[numVertices];
+        GraphQueue queue = new GraphQueue();
+        queue.add(vertices[fromIndex]);
+        Vertex removed = queue.remove();
+        int i = 1;
+        while (removed.equals(vertices[toIndex])) {
+            Iterator<Edge> it = removed.edges.iterator();
+            while (it.hasNext()) {
+                Vertex neighbor = vertices[it.next().endNode];
+                queue.add(neighbor);
+                neighbor.encountered = true;
+                neighbor.parent = removed;
+                neighbor.cost = i;
+            }
+            removed = queue.remove();
+            i++;
+        }
+     */
 
     /** 
      * Vertex class; a private, nested class of Graph class
@@ -302,6 +415,25 @@ public class Graph {
         public Edge(int endNode) {
             this.endNode = endNode;
             cost = 0;
+        }
+    }
+
+    /**
+     * GraphQueue class; a private, nested class of Graph class
+     */
+    private class GraphQueue{
+        private LinkedList<Vertex> list;
+
+        public GraphQueue() {
+            list = new LinkedList<Vertex>();
+        }
+
+        public void add(Vertex vertex) {
+            list.addLast(vertex);
+        }
+
+        public Vertex remove() {
+            return list.removeFirst();
         }
     }
 }

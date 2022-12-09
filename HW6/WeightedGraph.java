@@ -1,8 +1,20 @@
+import java.util.LinkedList;
+
 /**
  * WeightedGraph class that works for weighted and directed graphs; for CSDS233 HW 6
  * @author Chaehyeon Kim cxk445
  */
 public class WeightedGraph {
+
+    private int maxNum;
+    private int numVertices;
+    private Vertex[] vertices;
+
+    public WeightedGraph(int max) {
+        maxNum = max;
+        numVertices = max;
+        vertices = new Vertex[max];
+    }
 
     /** Constructing weighted, directed graphs */
 
@@ -14,6 +26,9 @@ public class WeightedGraph {
      * @return true if successful and false otherwise
      */
     public boolean addWeightedEdge(String from, String to, int weight) {
+
+        
+
         return false;
     }
 
@@ -44,7 +59,7 @@ public class WeightedGraph {
      * @return The shortest path from node from to node to. If there are multiple paths of equivalent length, only return one of them. If the path does not exist, return an empty array.
      */
     public String[] shortestPath(String from, String to) {
-        return null;
+        
     }
 
     /**
@@ -55,5 +70,31 @@ public class WeightedGraph {
      */
     public String[] secondShortestPath(String from, String to) {
         return null;
+    }
+
+    private class Vertex {
+        private String name;
+        private LinkedList<Edge> edges;
+        private boolean encountered;
+        private int cost;
+        private Vertex parent;
+
+        public Vertex(String name) {
+            this.name = name;
+            edges = new LinkedList<Edge>();
+            encountered = false;
+            cost = 0;
+            parent = null;
+        }
+    }
+
+    private class Edge {
+        private int endNode;
+        private int cost;
+
+        public Edge(int endNode, int cost) {
+            this.endNode = endNode;
+            this.cost = cost;
+        }
     }
 }
