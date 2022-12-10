@@ -109,36 +109,27 @@ public class Graph {
      */
     public boolean removeNode(String name) {
         // find the node
-        int nameIndex = -1; // index of vertices[] where the input vertex is
-        // look for the node containing input name
-        for (int i = 0; i < maxNum; i++) {
-            if (name.equals(vertices[i].name)) {
-                nameIndex = i;
-                i = maxNum;
-            }
-        }
-        if (nameIndex == -1)
-            return false; // input name not found
-        // remove all connected edges first to make the vertex isolated
-        LinkedList<Edge> neighbors = vertices[nameIndex].edges;
-        Iterator<Edge> it = neighbors.iterator();
-        while (it.hasNext()) {
-            Vertex neighbor = vertices[it.next().endNode]; // end node index of the next edge
-            // go to that endNode and delete the edge pointing to input node
-            Iterator<Edge> it2 = neighbor.edges.iterator();
-            int i = 0;
-            while (it2.hasNext()) {
-                if (it2.next().endNode == nameIndex) {
-                    neighbor.edges.remove(i);
-                    break;
+        int nameIndex = search(name);
+        if (nameIndex != -1) { // if vertex with 'name' found/exists in the graph
+            // remove all connected edges first to make the vertex isolated
+            LinkedList<Edge> neighbors = vertices.get(nameIndex).edges;
+            Iterator<Edge> it = neighbors.iterator();
+            while (it.hasNext()) { // go to the endnodes and delete from there
+                Vertex neighbor = vertices.get(it.next().endNode);
+                int nindex = 0;
+                Iterator<Edge> nit = neighbor.edges.iterator();
+                while (nit.hasNext()) {
+                    if (nit.next().endNode == nameIndex)
+                        break;
+                    nindex++;
                 }
-                i++;
+                neighbor.edges.remove(nindex);
             }
-            neighbors.removeFirst();
+            // remove vertex
+            vertices.remove(nameIndex);
+            return true;
         }
-        // remove vertex
-        vertices[nameIndex] = null;
-        return true;
+        return false;
     }
 
     /**
@@ -149,25 +140,36 @@ public class Graph {
     public boolean removeNodes(String[] nodelist) {
         boolean successful = false;
         for (int i = 0; i < nodelist.length; i++) {
-            if (i == 0 && removeNode(nodelist[i]))
-                successful = true;
-            else if (removeNode(nodelist[i]) && successful == true)
-                successful = true;
+            if (removeNode(nodelist[i])) {
+                if (i == 0)
+                    successful = true;
+            }
+            else
+                successful = false;
         }
-        return successful; // return false when one of the edges couldn't be removed; rest that was successful still removed
+        return successful; // return false when one or more of the edges couldn't be added
     }
 
     /**
      * Prints the graph in an adjacency list format. The nodes and their neighbors and their neighbors should be listed in alphabetical order.
      */
     public void printGraph() {
-        for (int i = 0; i < maxNum; i++) {
-            String[] neighbors = new String[numVertices];
-            Iterator<Edge> it = vertices[i].edges.iterator();
+        // loop through all vertices
+        for (int i = 0; i < vertices.size(); i++) {
+            // loop through the whole list of edges
+            Iterator<Edge> it = vertices.get(i).edges.iterator();
+            ArrayList<String> arr = new ArrayList<>();
             while (it.hasNext())
-                neighbors[i] = vertices[it.next().endNode].name;
-            Arrays.sort(neighbors);
-            System.out.println(vertices[i].name + ": " + neighbors.toString());
+                arr.add(vertices.get(it.next().endNode).name); // adding the name of the node at the end of the edge
+            arr.sort(String.CASE_INSENSITIVE_ORDER); // sort arr alphabetically
+            String[] arrString = (String[]) arr.toArray(); // convert ArrayList arr to String[]
+            System.out.println('"' + vertices.get(i).name +'"' + " -> ");
+            for (int j = 0; j < arrString.length; j++) { // print out all neighbors
+                if (j < arrString.length - 1)
+                    System.out.print('"' + arrString[j] + '"' + " -> ");
+                else
+                    System.out.print('"' + arrString[j]);
+            }
         }
     }
 
@@ -225,18 +227,6 @@ public class Graph {
             }
         }
     }
-
-    private String[] reverse(String[] array) {
-        int i = 0;
-        int j = array.length - 1;
-        while (i < j) {
-            String temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
-        return array;
-    }
-
     /**
      * Returns the path or a list of node names of breadth-first search between nodes from and to.
      * @param from The starting node of breadth-first search
