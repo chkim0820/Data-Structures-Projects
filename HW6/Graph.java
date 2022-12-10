@@ -1,7 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 
 /**
  * Graph class for CSDS233 HW 6
@@ -9,14 +9,15 @@ import java.util.PriorityQueue;
  */
 public class Graph {
 
-    private Vertex[] vertices;
-    private int numVertices;
-    private int maxNum;
+    private ArrayList<Vertex> vertices;
+    //private Vertex[] vertices;
+    //private int numVertices;
+    //private int maxNum;
 
     public Graph(int max) {
-        vertices = new Vertex[max];
-        numVertices = 0;
-        maxNum = max;
+        vertices = new ArrayList<>();
+        //numVertices = 0;
+        //maxNum = max;
     }
 
     /**
@@ -25,8 +26,8 @@ public class Graph {
      * @return the index of the vertex with the input name
      */
     private int search(String vertexName) {
-        for (int i = 0; i < maxNum; i++) {
-            if (vertexName.equals(vertices[i].name))
+        for (int i = 0; i < vertices.size(); i++) {
+            if (vertexName.equals(vertices.get(i).name))
                 return i;
         }
         return -1;
@@ -40,26 +41,11 @@ public class Graph {
      * @return true if successful and false otherwise
      */
     public boolean addNode(String name) {
-        if (numVertices >= maxNum) { // resize
-            int newMax = (int)(maxNum * 1.25);
-            Vertex[] temp = new Vertex[newMax];
-            for (int i = 0; i < maxNum; i++) {
-                temp[i] = vertices[i];
-            }
-            vertices = temp;
-            maxNum = newMax;
+        if (search(name) == -1) { // if a node of the same name is not there already
+            vertices.add(new Vertex(name));
+            return true;
         }
-        int empty = -1;
-        for (int i = 0; i < maxNum; i++) { // check for duplicates & empty index
-            if (name.equals(vertices[i].name))
-                return false;
-            if (vertices[i] == null) {
-                empty = i;
-            }
-        }
-        vertices[empty] = new Vertex(name);
-        numVertices++;
-        return true;
+        return false;
     }
 
     /**
@@ -70,12 +56,14 @@ public class Graph {
     public boolean addNodes(String[] names) {
         boolean successful = false;
         for (int i = 0; i < names.length; i++) {
-            if (i == 0 && addNode(names[i]))
-                successful = true;
-            else if (addNode(names[i]) && successful == true)
-                successful = true;
+            if (addNode(names[i])) {
+                if (i == 0)
+                    successful = true;
+            }
+            else
+                successful = false;
         }
-        return successful; // return false when one of the names couldn't be added
+        return successful; // return false when one or more of the names couldn't be added
     }
 
     /**
@@ -85,21 +73,14 @@ public class Graph {
      * @return true if successful and false otherwise
      */
     public boolean addEdge(String from, String to) {
-        int fromIndex = -1;
-        int toIndex = -1;
-        if (from.equals(to))
-            return false;
-        for (int i = 0; i < maxNum; i++) {
-            if (from.equals(vertices[i].name))
-                fromIndex = i;
-            if (to.equals(vertices[i].name))
-                toIndex = i;
+        int fromIndex = search(from);
+        int toIndex = search(to);
+        if (fromIndex != -1 && toIndex != -1) {
+            vertices.get(fromIndex).edges.addLast(new Edge(toIndex));
+            vertices.get(toIndex).edges.addLast(new Edge(fromIndex)); // add both ways since undirected
+            return true;
         }
-        if (fromIndex == -1 || toIndex == -1) // either from or to not found
-            return false;
-        vertices[fromIndex].edges.addLast(new Edge(toIndex));
-        vertices[toIndex].edges.addLast(new Edge(fromIndex)); // add both ways since undirected
-        return true;
+        return false;
     }
 
     /**
@@ -111,12 +92,14 @@ public class Graph {
     public boolean addEdges(String from, String[] tolist) {
         boolean successful = false;
         for (int i = 0; i < tolist.length; i++) {
-            if (i == 0 && addEdge(from, tolist[i]))
-                successful = true;
-            else if (addEdge(from, tolist[i]) && successful == true)
-                successful = true;
+            if (addEdge(from, tolist[i])) {
+                if (i == 0)
+                    successful = true;
+            }
+            else
+                successful = false;
         }
-        return successful; // return false when one of the edges couldn't be added; rest that was successful still added
+        return successful; // return false when one or more of the edges couldn't be added
     }
 
     /**
