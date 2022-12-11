@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -10,8 +11,33 @@ public class Graph {
 
     private ArrayList<Vertex> vertices;
 
-    public Graph(int max) {
+    public Graph() {
         vertices = new ArrayList<>();
+    }
+
+    /**
+     * Returns an array containing names of all vertices
+     * @return an array containing names of all vertices
+     */
+    public String[] getVertices() {
+        ArrayList<String> nameList = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++)
+            nameList.add(vertices.get(i).name);
+        return nameList.toArray(new String[0]);
+    }
+
+    /**
+     * Returns an array containing names of all neighbors of the vertex of the input index
+     * @param nodeIndex the index of the node to look for edges for
+     * @return an array containing names of all neighbors of the vertex of the input index
+     */
+    public String[] getEdges(int nodeIndex) {
+        ArrayList<String> nameList = new ArrayList<>();
+        LinkedList<Edge> edgeList = vertices.get(nodeIndex).edges;
+        Iterator<Edge> it = edgeList.iterator();
+        while (it.hasNext())
+            nameList.add(it.next().endNodeName); // add the name of the neighbors
+        return nameList.toArray(new String[0]);
     }
 
     /**
@@ -71,7 +97,8 @@ public class Graph {
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) {
             vertices.get(fromIndex).edges.addLast(new Edge(toIndex));
-            vertices.get(toIndex).edges.addLast(new Edge(fromIndex)); // add both ways since undirected
+            if (fromIndex != toIndex)
+                vertices.get(toIndex).edges.addLast(new Edge(fromIndex)); // add both ways since undirected
             return true;
         }
         return false;
@@ -110,20 +137,36 @@ public class Graph {
             Iterator<Edge> it = neighbors.iterator();
             while (it.hasNext()) { // go to the endnodes and delete from there
                 Vertex neighbor = vertices.get(it.next().endNode);
-                int nindex = 0;
                 Iterator<Edge> nit = neighbor.edges.iterator();
+                int nindex = 0;
                 while (nit.hasNext()) {
-                    if (nit.next().endNode == nameIndex)
-                        break;
+                    Edge edge = nit.next();
+                    if (edge.endNode == nameIndex)
+                        neighbor.edges.remove(nindex);
                     nindex++;
                 }
-                neighbor.edges.remove(nindex);
             }
+            // reassign all endNode values
+            reassignEndNode();
             // remove vertex
             vertices.remove(nameIndex);
             return true;
         }
         return false;
+    }
+
+    /**
+     * Reassign endNode indeces for all edges after vertices shifted after deletion
+     */
+    private void reassignEndNode() {
+        for (int i = 0; i < vertices.size(); i++) {
+            LinkedList<Edge> edgeList = vertices.get(i).edges;
+            Iterator<Edge> it = edgeList.iterator();
+            while (it.hasNext()) {
+                Edge edge = it.next();
+                edge.endNode = search(edge.endNodeName);
+            }
+        }
     }
 
     /**
@@ -146,6 +189,7 @@ public class Graph {
 
     /**
      * Prints the graph in an adjacency list format. The nodes and their neighbors and their neighbors should be listed in alphabetical order.
+     * Each rows are each vertices of the graph.
      */
     public void printGraph() {
         // loop through all vertices
@@ -154,16 +198,19 @@ public class Graph {
             Iterator<Edge> it = vertices.get(i).edges.iterator();
             ArrayList<String> arr = new ArrayList<>();
             while (it.hasNext())
-                arr.add(vertices.get(it.next().endNode).name); // adding the name of the node at the end of the edge
+                arr.add(it.next().endNodeName); // adding the name of the node at the end of the edge
             arr.sort(String.CASE_INSENSITIVE_ORDER); // sort arr alphabetically
-            String[] arrString = (String[]) arr.toArray(); // convert ArrayList arr to String[]
-            System.out.println('"' + vertices.get(i).name +'"' + " -> ");
-            for (int j = 0; j < arrString.length; j++) { // print out all neighbors
-                if (j < arrString.length - 1)
-                    System.out.print('"' + arrString[j] + '"' + " -> ");
+            if (i != 0)
+                System.out.print("\n");
+            System.out.print('"' + vertices.get(i).name +'"' + " -> ");
+            for (int j = 0; j < arr.size(); j++) { // print out all neighbors
+                if (j + 1 < arr.size())
+                    System.out.print('"' + arr.get(j) + '"' + " -> ");
                 else
-                    System.out.print('"' + arrString[j]);
+                    System.out.print('"' + arr.get(j) + '"');
             }
+            if (i == vertices.size() - 1)
+                System.out.print("\n");
         }
     }
 
@@ -192,15 +239,19 @@ public class Graph {
                 path.addFirst(toVertex.name);
                 toVertex = toVertex.parent;
             }
-            // reset the values of the encountered field for all nodes
-            for (int i = 0; i < vertices.size(); i++) {
-                vertices.get(i).encountered = false;
-            }
-            return (String[])path.toArray();
+             
+            return path.toArray(new String[0]);
         }
         return null;
     }
 
+    /**
+     * A private recursive helper method for DFS()
+     * @param fromIndex the index of the vertex at the start of the search
+     * @param toIndex the index of the vertex at the end of the search
+     * @param neighborOrder 1 if alphabetical or -1 if reverse
+     * @return the vertex at the end of the search
+     */
     private Vertex recursiveDFS(int fromIndex, int toIndex, int neighborOrder) { // =1 if alphabetical -1 if reverse
         Vertex from = vertices.get(fromIndex);
         from.encountered = true; // mark from node as encountered
@@ -230,6 +281,11 @@ public class Graph {
         return null;
     }
 
+    /**
+     * A helper method that reverses the input arrayList
+     * @param arrayList an ArrayList object to be reversed
+     * @return reversed arrayList
+     */
     private ArrayList<String> reverse(ArrayList<String> arrayList) {
         ArrayList<String> revArr = new ArrayList<>();
         for (int i = arrayList.size() - 1; i >= 0; i--) // add elements of arrayList from back to front to the temp array
@@ -264,11 +320,18 @@ public class Graph {
             for (int i = 0; i < vertices.size(); i++) {
                 vertices.get(i).encountered = false;
             }
-            return (String[])path.toArray();
+            return path.toArray(new String[0]);
         }
         return null;
     }
 
+    /**
+     * Helper method for BFS
+     * @param fromIndex the starting node of the search
+     * @param toIndex the end node of the search
+     * @param neighborOrder 1 if alphabetical and -1 if reverse
+     * @return the vertex at the end of the search
+     */
     private Vertex BFSHelper(int fromIndex, int toIndex, int neighborOrder) {
         GraphQueue queue = new GraphQueue();
         // add the first vertex
@@ -329,11 +392,17 @@ public class Graph {
             for (int i = 0; i < vertices.size(); i++) {
                 vertices.get(i).encountered = false;
             }
-            return (String[])path.toArray();
+            return path.toArray(new String[0]);
         }
         return null;
     }
 
+    /**
+     * Helper method for secondShortestPath() that finds the path
+     * @param fromIndex the starting vertex of the search
+     * @param toIndex the end vertex of the search
+     * @return the vertex at the second shortest path
+     */
     private Vertex SSPHelper(int fromIndex, int toIndex) {
         GraphQueue queue = new GraphQueue();
         boolean alrEncountered = false;
@@ -381,7 +450,7 @@ public class Graph {
 
         public Vertex(String name) {
             this.name = name;
-            edges = null;
+            edges = new LinkedList<Edge>();
             parent = null;
             encountered = false;
             cost = 0;
@@ -393,10 +462,12 @@ public class Graph {
      */
     private class Edge {
         private int endNode;
+        private String endNodeName;
         private int cost;
 
         public Edge(int endNode) {
             this.endNode = endNode;
+            endNodeName = vertices.get(endNode).name;
             cost = 0;
         }
     }
@@ -418,5 +489,45 @@ public class Graph {
         public Vertex remove() {
             return list.removeFirst();
         }
+    }
+
+    public static void main(String[] args) {
+        Graph graph = new Graph();
+
+        // Print out an empty graph
+        System.out.println("When using printGraph() on an empty graph, it doesn't print anything. The result:");
+        graph.printGraph();
+
+        // Print out a graph with nodes and no edges
+        System.out.println("\nWhen using printGraph() on a graph with nodes and no edges, it looks like this. The result:");
+        graph.addNode("apple");
+        graph.addNode("banana");
+        graph.addNode("cider");
+        graph.printGraph();
+
+        // Print out a graph with nodes and edges
+        System.out.println("\nWhen using printGraph() on a graph with nodes and edges, it looks like this. As you can see, it prints the graph in an adjacency list format. The result:");
+        graph.addEdge("apple", "banana");
+        graph.addEdge("apple", "cider");
+        graph.addEdge("banana", "cider");
+        graph.printGraph();
+
+        // More complex graph example
+        System.out.println("\nMore complex graph example:");
+        Graph graph2 = new Graph();
+        graph2.addNode("A");
+        graph2.addNode("b");
+        graph2.addNode("C");
+        graph2.addNode("d");
+        graph2.addNode("E");
+        graph2.addEdge("A", "b");
+        graph2.addEdge("A", "d");
+        graph2.addEdge("A", "E");
+        graph2.addEdge("b", "C");
+        graph2.addEdge("b", "d");
+        graph2.addEdge("C", "E");
+        graph2.addEdge("C", "E");
+        graph2.printGraph();
+        System.out.print("Notice how the neighbors are listed in alphabetical order.");
     }
 }

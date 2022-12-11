@@ -84,7 +84,7 @@ public class WeightedGraph {
                     arr.add(vertices.get(it.next().endNode).name); // adding the name of the node at the end of the edge
                 }
                 arr.sort(String.CASE_INSENSITIVE_ORDER); // sort arr alphabetically
-                String[] arrString = (String[]) arr.toArray(); // convert ArrayList arr to String[]
+                String[] arrString = arr.toArray(new String[0]); // convert ArrayList arr to String[]
                 System.out.println('"' + vertices.get(i).name +'"' + " -> ");
                 for (int j = 0; j < arrString.length; j++) { // print out all neighbors
                     if (j < arrString.length - 1)
@@ -104,11 +104,12 @@ public class WeightedGraph {
      * @param to the end node when finding the shortest path
      * @return The shortest path from node from to node to. If there are multiple paths of equivalent length, only return one of them. If the path does not exist, return an empty array.
      */
-    public String[] shortestPath(String from, String to) {
-        PriorityQueue<Vertex> finalized = new PriorityQueue<>(); // PriorityQueue containing all finalized vertices
+    public String[] shortestPath(String from, String to) { // revise using priority queue
+        LinkedList<Vertex> finalized = new LinkedList<>(); // PriorityQueue containing all finalized vertices
         int fromIndex = search(from);
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) {
+            ///PriorityQueue<Vertex> heap = new PriorityQueue<>();
             finalized.add(vertices.get(fromIndex));
             vertices.get(fromIndex).finalized = true;
             Iterator<Edge> it = vertices.get(fromIndex).edges.iterator();
@@ -167,7 +168,7 @@ public class WeightedGraph {
             for (int i = 0; i < vertices.size(); i++) {
                 vertices.get(i).encountered = false;
             }
-            return (String[])path.toArray();
+            return path.toArray(new String[0]);
         }
         return null;
     }
