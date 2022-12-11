@@ -9,8 +9,12 @@ import java.util.PriorityQueue;
  */
 public class WeightedGraph {
 
+    /** storing the vertices of the graph */
     private ArrayList<Vertex> vertices;
 
+    /**
+     * Constructor for this WeightedGraph class
+     */
     public WeightedGraph() {
         vertices = new ArrayList<>();
     }
@@ -215,8 +219,17 @@ public class WeightedGraph {
         return null;
     }
 
+    /**
+     * Helper method returning the smaller of the two inputs
+     * @param opt1 input 1
+     * @param opt2 input 2
+     * @return the smaller of the two inputs
+     */
     private int minCost(int opt1, int opt2) {
-        return -1;
+        if (opt1 < opt2)
+            return opt1;
+        else
+            return opt2;
     }
 
     /**
@@ -230,14 +243,28 @@ public class WeightedGraph {
         return null;
     }
 
+    /**
+     * A private nested Vertex class
+     */
     private class Vertex {
+
+        /** name of the vertex */
         private String name;
+        /** edges of the vertex */
         private LinkedList<Edge> edges;
+        /** stores whether this vertex has been encountered or not */
         private boolean encountered;
+        /** stores the cost of the vertex */
         private int cost;
+        /** the parent vertex of this vertex */
         private Vertex parent;
+        /** stores whether this vertex has been finalized in Dijkstra's algorithm */
         private boolean finalized;
 
+        /**
+         * Constructor for Vertex class
+         * @param name name of the vertex
+         */
         public Vertex(String name) {
             this.name = name;
             edges = new LinkedList<Edge>();
@@ -248,11 +275,23 @@ public class WeightedGraph {
         }
     }
 
+    /**
+     * A private nested Edge class
+     */
     private class Edge {
+
+        /** the index of the endNode */
         private int endNode;
+        /** the name of the endNode */
         private String endNodeName;
+        /** the cost of this edge */
         private int cost;
 
+        /**
+         * Constructor for Edge class
+         * @param endNode the index of the endNode
+         * @param cost the cost of this edge
+         */
         public Edge(int endNode, int cost) {
             this.endNode = endNode;
             endNodeName = vertices.get(endNode).name;

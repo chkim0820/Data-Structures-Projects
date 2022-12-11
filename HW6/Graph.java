@@ -8,8 +8,12 @@ import java.util.LinkedList;
  */
 public class Graph {
 
+    /** stores the vertices of the graph */
     private ArrayList<Vertex> vertices;
 
+    /**
+     * Constructor for the Graph class
+     */
     public Graph() {
         vertices = new ArrayList<>();
     }
@@ -216,6 +220,18 @@ public class Graph {
     /** Finding paths on undirected, unweighted graphs */
 
     /**
+     * A helper method that reverses the input arrayList
+     * @param arrayList an ArrayList object to be reversed
+     * @return reversed arrayList
+     */
+    private ArrayList<String> reverse(ArrayList<String> arrayList) {
+        ArrayList<String> revArr = new ArrayList<>();
+        for (int i = arrayList.size() - 1; i >= 0; i--) // add elements of arrayList from back to front to the temp array
+            revArr.add(arrayList.get(i));
+        return revArr;
+    }
+
+    /**
      * A helper method that builds a String array of vertex names along the path if one found
      * @param toVertex the end node of the path
      * @return a String array of vertices along the path
@@ -296,18 +312,6 @@ public class Graph {
         }
         // if from & to and edge not found, 
         return false;
-    }
-
-    /**
-     * A helper method that reverses the input arrayList
-     * @param arrayList an ArrayList object to be reversed
-     * @return reversed arrayList
-     */
-    private ArrayList<String> reverse(ArrayList<String> arrayList) {
-        ArrayList<String> revArr = new ArrayList<>();
-        for (int i = arrayList.size() - 1; i >= 0; i--) // add elements of arrayList from back to front to the temp array
-            revArr.add(arrayList.get(i));
-        return revArr;
     }
 
     /**
@@ -451,12 +455,22 @@ public class Graph {
      * Vertex class; a private, nested class of Graph class
      */
     private class Vertex {
+
+        /** stores the name of the vertex */
         private String name;
+        /** stores the edges of this vertex */
         private LinkedList<Edge> edges;
+        /** stores the parent vertex */
         private Vertex parent;
+        /** stores whether the vertex has been encountered or not */
         private boolean encountered;
+        /** stores the cost to get to this vertex */
         private int cost;
 
+        /**
+         * Constructor method for this Vertex class
+         * @param name name of the vertex
+         */
         public Vertex(String name) {
             this.name = name;
             edges = new LinkedList<Edge>();
@@ -470,10 +484,18 @@ public class Graph {
      * Edge class; a private, nested class of Graph class
      */
     private class Edge {
+
+        /** the index of the endNode */
         private int endNode;
+        /** the name of the endNode */
         private String endNodeName;
+        /** cost of the edge */
         private int cost;
 
+        /**
+         * Constructor for this Edge class
+         * @param endNode the index of the endNode
+         */
         public Edge(int endNode) {
             this.endNode = endNode;
             endNodeName = vertices.get(endNode).name;
@@ -485,20 +507,37 @@ public class Graph {
      * GraphQueue class; a private, nested class of Graph class
      */
     private class GraphQueue{
+
+        /** the linked list containing the items of the queue */
         private LinkedList<Vertex> list;
 
+        /**
+         * Constructor for the GraphQueue class
+         */
         public GraphQueue() {
             list = new LinkedList<Vertex>();
         }
 
+        /**
+         * Adds the input vertex at the end of the queue
+         * @param vertex vertex to be added
+         */
         public void add(Vertex vertex) {
             list.addLast(vertex);
         }
 
+        /**
+         * Removes the vertex at the beginning of the queue
+         * @return the vertex removed
+         */
         public Vertex remove() {
             return list.removeFirst();
         }
 
+        /**
+         * Returns the vertex at the beginning of the queue without removing it
+         * @return the vertex at the beginning of the queue
+         */
         public Vertex peek() {
             return list.peek();
         }

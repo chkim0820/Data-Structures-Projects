@@ -350,7 +350,7 @@ public class CSDS233HW6JUnit {
         assertArrayEquals(null, graph.secondShortestPath("apple", "grapefruit"));
 
         // Testing the same from and to nodes
-        String[] temp = {"apple", "banana", "apple"};
+        String[] temp = {"apple"};
         assertArrayEquals(temp, graph.secondShortestPath("apple", "apple"));
 
         // Testing a path at depth = 1
