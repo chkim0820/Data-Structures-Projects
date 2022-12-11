@@ -116,23 +116,25 @@ public class WeightedGraph {
     public void printWeightedGraph() {
         // loop through all vertices
         for (int i = 0; i < vertices.size(); i++) {
-            if (vertices.get(i) != null) {
-                // loop through the whole list of edges
-                Iterator<Edge> it = vertices.get(i).edges.iterator();
-                ArrayList<String> arr = new ArrayList<>();
-                while (it.hasNext()) {
-                    arr.add(vertices.get(it.next().endNode).name); // adding the name of the node at the end of the edge
-                }
-                arr.sort(String.CASE_INSENSITIVE_ORDER); // sort arr alphabetically
-                String[] arrString = arr.toArray(new String[0]); // convert ArrayList arr to String[]
-                System.out.println('"' + vertices.get(i).name +'"' + " -> ");
-                for (int j = 0; j < arrString.length; j++) { // print out all neighbors
-                    if (j < arrString.length - 1)
-                        System.out.print('"' + arrString[j] + '"' + " -> ");
-                    else
-                        System.out.print('"' + arrString[j]);
-                }
+            // loop through the whole list of edges
+            Iterator<Edge> it = vertices.get(i).edges.iterator();
+            ArrayList<String> arr = new ArrayList<>();
+            while (it.hasNext()) {
+                Edge edge = it.next();
+                arr.add(edge.endNodeName + " (" + edge.cost + ")"); // adding the name of the node at the end of the edge
             }
+            arr.sort(String.CASE_INSENSITIVE_ORDER); // sort arr alphabetically
+            if (i != 0)
+                System.out.print("\n");
+            System.out.print(vertices.get(i).name + " to: ");
+            for (int j = 0; j < arr.size(); j++) { // print out all neighbors
+                if (j + 1 < arr.size())
+                    System.out.print(arr.get(j) + ", ");
+                else
+                    System.out.print(arr.get(j));
+            }
+            if (i == vertices.size() - 1)
+                System.out.print("\n");
         }
     }
 
@@ -277,7 +279,7 @@ public class WeightedGraph {
         graph.printWeightedGraph();
 
         // Print out a graph with nodes and edges
-        System.out.println("\nWhen using printWeightedGraph() on a graph with nodes and edges, it looks like this. As you can see, it prints the graph in an adjacency list format. The result:");
+        System.out.println("\nWhen using printWeightedGraph() on a graph with nodes and edges, it looks like this. The result:");
         graph.addWeightedEdge("apple", "banana", 2);
         graph.addWeightedEdge("apple", "cider", 4);
         graph.addWeightedEdge("banana", "cider", 5);
@@ -285,26 +287,56 @@ public class WeightedGraph {
         graph.addWeightedEdge("cider", "apple", 1);
         graph.printWeightedGraph();
 
-        // More complex graph example
+        // More complex graph example; with on-campus locations
+        // Setting up the graph
         System.out.println("\nMore complex graph example:");
         WeightedGraph graph2 = new WeightedGraph();
-        graph2.addNode("A");
-        graph2.addNode("b");
-        graph2.addNode("C");
-        graph2.addNode("d");
-        graph2.addNode("E");
-        graph2.addWeightedEdge("A", "b", 2);
-        graph2.addWeightedEdge("A", "d", 4);
-        graph2.addWeightedEdge("A", "E", 3);
-        graph2.addWeightedEdge("b", "C", 5);
-        graph2.addWeightedEdge("b", "d", 1);
-        graph2.addWeightedEdge("C", "E", 6);
-        graph2.addWeightedEdge("C", "E", 8);
-        graph2.addWeightedEdge("d", "c", 3);
-        graph2.addWeightedEdge("d", "C", 5);
-        graph2.addWeightedEdge("d", "b", 1);
-        graph2.addWeightedEdge("E", "a", 6);
-        graph2.addWeightedEdge("E", "d", 0);
+        graph2.addNode("Village");
+        graph2.addNode("The Den");
+        graph2.addNode("Plum Market");
+        graph2.addNode("CoffeeHouse");
+        graph2.addNode("Smith");
+        graph2.addNode("Taft");
+        graph2.addNode("Taplin");
+        graph2.addNode("CIM");
+        graph2.addNode("Cutter");
+        
+        String[] villageNeighbors = {"The Den", "Plum Market", "CIM"};
+        int[] villageCosts = {9, 10, 30};
+        graph2.addWeightedEdges("Village", villageNeighbors, villageCosts);
+
+        String[] denNeighbors = {"Village", "Taft", "CoffeeHouse", "Plum", "CIM"};
+        int[] denCosts = {9, 4, 5, 5, 30};
+        graph2.addWeightedEdges("The Den", denNeighbors, denCosts);
+
+        String[] plumNeighbors = {"Village", "The Den", "CoffeeHouse", "CIM"};
+        int[] plumCosts = {10, 5, 8, 30};
+        graph2.addWeightedEdges("Plum Market", plumNeighbors, plumCosts);
+
+        String[] coffeeNeighbors = {"The Den", "Plum Market", "Smith"};
+        int[] coffeeCosts = {5, 8, 3};
+        graph2.addWeightedEdges("CoffeeHouse", coffeeNeighbors, coffeeCosts);
+
+        String[] smithNeighbors = {"CoffeeHouse", "Taft", "Cutter"};
+        int[] smithCosts = {3, 9, 3};
+        graph2.addWeightedEdges("Smith", smithNeighbors, smithCosts);
+
+        String[] taftNeighbors = {"The Den", "Smith", "Taplin", "CIM"};
+        int[] taftCosts = {4, 9, 2, 12};
+        graph2.addWeightedEdges("Taft", taftNeighbors, taftCosts);
+
+        String[] taplinNeighbors = {"Taft", "CIM"};
+        int[] taplinCosts = {2, 14};
+        graph2.addWeightedEdges("Taplin", taplinNeighbors, taplinCosts);
+
+        String[] cimNeighbors = {"Taft", "Taplin", "Cutter", "Plum Market", "The Den", "Village"};
+        int[] cimCosts = {12, 14, 9, 30, 30, 30};
+        graph2.addWeightedEdges("CIM", cimNeighbors, cimCosts);
+
+        String[] cutterNeighbors = {"Smith", "CIM"};
+        int[] cutterCosts = {9, 10, 30};
+        graph2.addWeightedEdges("Cutter", cutterNeighbors, cutterCosts);
+        
         graph2.printWeightedGraph();
         System.out.print("Notice how the neighbors are listed in alphabetical order.");
     }

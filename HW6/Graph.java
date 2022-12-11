@@ -431,11 +431,13 @@ public class Graph {
                     next.parent = removed;
                     return true;
                 }
-                else if (next.encountered == false) {
+                else if (next.encountered == false && nextIndex != toIndex) {
                     queue.add(next);
                     next.encountered = true;
                     next.parent = removed;
                 }
+                else if (next.encountered == false && nextIndex == toIndex)
+                    next.encountered = true;
             }
             removed = queue.peek();
         }
