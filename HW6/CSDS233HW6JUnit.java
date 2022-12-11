@@ -213,13 +213,15 @@ public class CSDS233HW6JUnit {
         graph.addNode("banana");
         graph.addNode("cider");
         graph.addNode("dill");
+        graph.addNode("egg");
+        graph.addNode("fig");
         graph.addEdge("apple", "banana");
         graph.addEdge("apple", "cider");
         graph.addEdge("banana", "dill");
         graph.addEdge("cider", "dill");
 
         // Testing a path with a non-existent node
-        assertArrayEquals(null, graph.DFS("apple", "fig", "alphabetical"));
+        assertArrayEquals(null, graph.DFS("apple", "garlic", "alphabetical"));
 
         // Testing the same from and to nodes
         String[] temp = {"apple"};
@@ -238,6 +240,12 @@ public class CSDS233HW6JUnit {
         // reverse
         String[] reverse3 = {"apple", "cider", "dill"};
         assertArrayEquals(reverse3, graph.DFS("apple", "dill", "reverse"));
+   
+        // Testing a path between two existing nodes, but one is isolated
+        assertArrayEquals(null, graph.BFS("apple", "egg", "alphabetical"));
+
+        // Testing a path between two existing nodes, but both are isolated
+        assertArrayEquals(null, graph.BFS("egg", "fig", "alphabetical"));
     }
 
     /**
@@ -251,6 +259,8 @@ public class CSDS233HW6JUnit {
         graph.addNode("banana");
         graph.addNode("cider");
         graph.addNode("dill");
+        graph.addNode("egg");
+        graph.addNode("fig");
         graph.addEdge("apple", "banana");
         graph.addEdge("apple", "cider");
         graph.addEdge("banana", "dill");
@@ -263,7 +273,7 @@ public class CSDS233HW6JUnit {
         String[] temp = {"apple"};
         assertArrayEquals(temp, graph.BFS("apple", "apple", "alphabetical"));
 
-        // Testing a path at depth = 1 or 4 depending on which order
+        // Testing a path at depth = 1
         String[] temp2 = {"apple", "cider"};
         assertArrayEquals(temp2, graph.BFS("apple", "cider", "alphabetical"));
         // reverse
@@ -276,6 +286,12 @@ public class CSDS233HW6JUnit {
         // reverse
         String[] reverse3 = {"apple", "cider", "dill"};
         assertArrayEquals(reverse3, graph.BFS("apple", "dill", "reverse"));
+
+        // Testing a path between two existing nodes, but one is isolated
+        assertArrayEquals(null, graph.BFS("apple", "egg", "alphabetical"));
+
+        // Testing a path between two existing nodes, but both are isolated
+        assertArrayEquals(null, graph.BFS("egg", "fig", "alphabetical"));
     }
 
     /**
@@ -323,27 +339,35 @@ public class CSDS233HW6JUnit {
         graph.addNode("banana");
         graph.addNode("cider");
         graph.addNode("dill");
+        graph.addNode("egg");
+        graph.addNode("fig");
         graph.addEdge("apple", "banana");
         graph.addEdge("apple", "cider");
         graph.addEdge("banana", "cider");
         graph.addEdge("cider", "dill");
 
         // Testing a path with a non-existent node
-        assertArrayEquals(null, graph.shortestPath("apple", "fig"));
+        assertArrayEquals(null, graph.secondShortestPath("apple", "grapefruit"));
 
         // Testing the same from and to nodes
-        String[] temp = {"apple"};
-        assertArrayEquals(temp, graph.shortestPath("apple", "apple"));
+        String[] temp = {"apple", "banana", "apple"};
+        assertArrayEquals(temp, graph.secondShortestPath("apple", "apple"));
 
         // Testing a path at depth = 1
         String[] temp2 = {"apple", "cider", "banana"};
-        assertArrayEquals(temp2, graph.shortestPath("apple", "banana"));
+        assertArrayEquals(temp2, graph.secondShortestPath("apple", "banana"));
         String[] temp3 = {"apple", "banana", "cider"};
-        assertArrayEquals(temp3, graph.shortestPath("apple", "cider"));
+        assertArrayEquals(temp3, graph.secondShortestPath("apple", "cider"));
 
         // Testing a path at depth = 2
         String[] temp4 = {"apple", "banana", "cider", "dill"};
-        assertArrayEquals(temp4, graph.shortestPath("apple", "dill"));
+        assertArrayEquals(temp4, graph.secondShortestPath("apple", "dill"));
+
+        // Testing a path between two existing nodes, but one is isolated
+        assertArrayEquals(null, graph.secondShortestPath("apple", "egg"));
+
+        // Testing a path between two existing nodes, but both are isolated
+        assertArrayEquals(null, graph.secondShortestPath("egg", "fig"));
     }
 
 

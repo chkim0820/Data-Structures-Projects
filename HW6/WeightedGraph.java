@@ -50,7 +50,7 @@ public class WeightedGraph {
         Iterator<Edge> it = edgeList.iterator();
         while (it.hasNext()) {
             Edge edge = it.next();
-            nameList.add(it.next().endNodeName + ", " + edge.cost + ""); // add the name of the neighbors
+            nameList.add(edge.endNodeName + ", " + edge.cost + ""); // add the name of the neighbors
         }
         return nameList.toArray(new String[0]);
     }

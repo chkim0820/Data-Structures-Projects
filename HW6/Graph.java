@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -217,6 +216,29 @@ public class Graph {
     /** Finding paths on undirected, unweighted graphs */
 
     /**
+     * A helper method that builds a String array of vertex names along the path if one found
+     * @param toVertex the end node of the path
+     * @return a String array of vertices along the path
+     */
+    private String[] pathBuilder(Vertex fromVertex, Vertex toVertex) {
+        LinkedList<String> path = new LinkedList<>(); // path b/w node from to node to
+        Vertex trav = toVertex;
+        boolean encountered = false;
+        while (trav != null) {
+            if (encountered && trav.equals(toVertex))
+                trav = null;
+            encountered = true;
+            path.addFirst(trav.name);
+            trav = trav.parent;
+        }
+        // reset the values of the encountered field for all nodes
+        for (int i = 0; i < vertices.size(); i++) {
+            vertices.get(i).encountered = false;
+        }
+        return path.toArray(new String[0]);
+    }
+
+    /**
      * Returns the path or a list of node names of depth-first search between nodes from and to.
      * @param from The starting node of depth-first search
      * @param to The end node of depth-first search
@@ -227,24 +249,16 @@ public class Graph {
         int fromIndex = search(from);
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) { // both from and to exists
+            boolean found = false;
             if (neighborOrder.toLowerCase().equals("alphabetical"))
-                recursiveDFS(fromIndex, toIndex, 1);
+                found = recursiveDFS(fromIndex, toIndex, 1);
             else if (neighborOrder.toLowerCase().equals("reverse"))
-                recursiveDFS(fromIndex, toIndex, -1);
+                found = recursiveDFS(fromIndex, toIndex, -1);
             else 
                 return null; // neighborOrder doesn't specify alphabetical or reverse
-            // build a String array of nodes in the path
-            LinkedList<String> path = new LinkedList<>();
-            Vertex toVertex = vertices.get(toIndex);
-            while (toVertex != null) {
-                path.addFirst(toVertex.name);
-                toVertex = toVertex.parent;
+            if (found) {
+                return pathBuilder(vertices.get(fromIndex), vertices.get(toIndex));
             }
-            // reset the values of the encountered field for all nodes
-            for (int i = 0; i < vertices.size(); i++) {
-                vertices.get(i).encountered = false;
-            } 
-            return path.toArray(new String[0]);
         }
         return null;
     }
@@ -256,11 +270,11 @@ public class Graph {
      * @param neighborOrder 1 if alphabetical or -1 if reverse
      * @return the vertex at the end of the search
      */
-    private void recursiveDFS(int fromIndex, int toIndex, int neighborOrder) {
+    private boolean recursiveDFS(int fromIndex, int toIndex, int neighborOrder) {
         Vertex from = vertices.get(fromIndex);
         from.encountered = true; // mark from node as encountered
         if (fromIndex == toIndex) { // base case
-            //return from;
+            return true;
         }
         else if (from.edges.size() > 0) { // if there are edges for from
             ArrayList<String> neighbors = new ArrayList<>();
@@ -276,12 +290,12 @@ public class Graph {
                 Vertex newFrom = vertices.get(newFromIndex);
                 if (newFrom.encountered == false) { // if not encountered yet
                     newFrom.parent = from;
-                    recursiveDFS(newFromIndex, toIndex, neighborOrder);
+                    return recursiveDFS(newFromIndex, toIndex, neighborOrder);
                 }
             }
         }
         // if from & to and edge not found, 
-        //return null;
+        return false;
     }
 
     /**
@@ -307,23 +321,16 @@ public class Graph {
         int fromIndex = search(from);
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) { // if both from and to vertices exist
-            LinkedList<String> path = new LinkedList<>(); // path b/w node from to node to
-            Vertex toVertex;
+            boolean found;
             if (neighborOrder.toLowerCase().equals("alphabetical"))
-                toVertex = BFSHelper(fromIndex, toIndex, 1);
+                found = BFSHelper(fromIndex, toIndex, 1);
             else if (neighborOrder.toLowerCase().equals("reverse"))
-                toVertex = BFSHelper(fromIndex, toIndex, -1);
+                found = BFSHelper(fromIndex, toIndex, -1);
             else 
                 return null;
-            while (toVertex != null) {
-                path.addFirst(toVertex.name);
-                toVertex = toVertex.parent;
+            if (found) { // if a path b/w from and to found
+                return pathBuilder(vertices.get(fromIndex), vertices.get(toIndex));
             }
-            // reset the values of the encountered field for all nodes
-            for (int i = 0; i < vertices.size(); i++) {
-                vertices.get(i).encountered = false;
-            }
-            return path.toArray(new String[0]);
         }
         return null;
     }
@@ -335,19 +342,19 @@ public class Graph {
      * @param neighborOrder 1 if alphabetical and -1 if reverse
      * @return the vertex at the end of the search
      */
-    private Vertex BFSHelper(int fromIndex, int toIndex, int neighborOrder) {
+    private boolean BFSHelper(int fromIndex, int toIndex, int neighborOrder) {
         GraphQueue queue = new GraphQueue();
         // add the first vertex
         queue.add(vertices.get(fromIndex));
-        Vertex removed = queue.remove();
-        for (int i = 0; i < vertices.size() && !removed.equals(vertices.get(toIndex)); i++) { // or !=
+        Vertex removed = queue.peek();
+        removed.encountered = true;
+        while (removed != null && !removed.equals(vertices.get(toIndex))) { // or !=
+            removed = queue.remove();
             // add all edges to start
             ArrayList<String> currentEdges = new ArrayList<>();
             Iterator<Edge> it = removed.edges.iterator();
-            while (it.hasNext()) { // add all edges to currentEdges list to sort alphabetically or reversely
-                //Vertex nextNode = vertices.get(it.next().endNode);
+            while (it.hasNext()) // add all edges to currentEdges list to sort alphabetically or reversely
                 currentEdges.add(vertices.get(it.next().endNode).name);
-            }
             currentEdges.sort(String.CASE_INSENSITIVE_ORDER); // sort alphabetically
             if (neighborOrder < 0) // reverse alphabetical sort
                 currentEdges = reverse(currentEdges);
@@ -357,12 +364,14 @@ public class Graph {
                     queue.add(next);
                     next.encountered = true;
                     next.parent = removed;
-                    next.cost = i + 1;
                 }
             }
-            removed = queue.remove();
+            removed = queue.peek();
         }
-        return removed;
+        if (removed != null) // if path found
+            return true;
+        else // if path not found
+            return false;
     }
 
     /**
@@ -385,17 +394,9 @@ public class Graph {
         int fromIndex = search(from);
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) { // if both from and to vertices exist
-            LinkedList<String> path = new LinkedList<>(); // path b/w node from to node to
-            Vertex toVertex = SSPHelper(fromIndex, toIndex);
-            while (toVertex != null) {
-                path.addFirst(toVertex.name);
-                toVertex = toVertex.parent;
+            if (SSPHelper(fromIndex, toIndex)) {
+                return pathBuilder(vertices.get(fromIndex), vertices.get(toIndex));
             }
-            // reset the values of the encountered field for all nodes
-            for (int i = 0; i < vertices.size(); i++) {
-                vertices.get(i).encountered = false;
-            }
-            return path.toArray(new String[0]);
         }
         return null;
     }
@@ -406,20 +407,21 @@ public class Graph {
      * @param toIndex the end vertex of the search
      * @return the vertex at the second shortest path
      */
-    private Vertex SSPHelper(int fromIndex, int toIndex) {
+    private boolean SSPHelper(int fromIndex, int toIndex) {
         GraphQueue queue = new GraphQueue();
         boolean alrEncountered = false;
         // add the first vertex
         queue.add(vertices.get(fromIndex));
-        Vertex removed = queue.remove();
+        Vertex removed = queue.peek();
+        removed.encountered = true;
         // loop through the graph
-        for (int i = 0; i < vertices.size() && !removed.equals(vertices.get(toIndex)) && alrEncountered == false; i++) { // or !=
+        while (removed != null && !removed.equals(vertices.get(toIndex)) && !alrEncountered) { // or !=
+            removed = queue.remove();
             // add all neighbors of removed
             ArrayList<String> currentEdges = new ArrayList<>();
             Iterator<Edge> it = removed.edges.iterator();
-            while (it.hasNext()) { // add all edges to currentEdges list to sort alphabetically or reversely
+            while (it.hasNext()) // add all edges to currentEdges list to sort alphabetically or reversely
                 currentEdges.add(vertices.get(it.next().endNode).name);
-            }
             currentEdges.sort(String.CASE_INSENSITIVE_ORDER); // sort alphabetically
             for (int j = 0; j < currentEdges.size(); j++) {
                 int nextIndex = search(currentEdges.get(j));
@@ -427,18 +429,20 @@ public class Graph {
                 if (next.encountered == true && nextIndex == toIndex) {
                     alrEncountered = true;
                     next.parent = removed;
-                    next.cost = next.parent.cost + 1;
+                    return true;
                 }
                 else if (next.encountered == false) {
                     queue.add(next);
                     next.encountered = true;
                     next.parent = removed;
-                    next.cost = next.parent.cost + 1;
                 }
             }
-            removed = queue.remove();
+            removed = queue.peek();
         }
-        return vertices.get(toIndex);
+        if (removed != null) // if path found
+            return true;
+        else // if path not found
+            return false;
     }
 
     /** 
@@ -491,6 +495,10 @@ public class Graph {
 
         public Vertex remove() {
             return list.removeFirst();
+        }
+
+        public Vertex peek() {
+            return list.peek();
         }
     }
 
