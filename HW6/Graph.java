@@ -224,22 +224,26 @@ public class Graph {
      * @return The result (the path or a list of node names, of depth-first search between nodes from and to). Return an empty array if no path exists.
      */
     public String[] DFS(String from, String to, String neighborOrder) {
-        //ArrayList<Vertex> encountered = new ArrayList<>(); // keeps track of which nodes are encountered
         int fromIndex = search(from);
         int toIndex = search(to);
         if (fromIndex != -1 && toIndex != -1) { // both from and to exists
-            Vertex toVertex = null;
             if (neighborOrder.toLowerCase().equals("alphabetical"))
-                toVertex = recursiveDFS(fromIndex, toIndex, 1);
+                recursiveDFS(fromIndex, toIndex, 1);
             else if (neighborOrder.toLowerCase().equals("reverse"))
-                toVertex = recursiveDFS(fromIndex, toIndex, -1);
+                recursiveDFS(fromIndex, toIndex, -1);
+            else 
+                return null; // neighborOrder doesn't specify alphabetical or reverse
             // build a String array of nodes in the path
             LinkedList<String> path = new LinkedList<>();
+            Vertex toVertex = vertices.get(toIndex);
             while (toVertex != null) {
                 path.addFirst(toVertex.name);
                 toVertex = toVertex.parent;
             }
-             
+            // reset the values of the encountered field for all nodes
+            for (int i = 0; i < vertices.size(); i++) {
+                vertices.get(i).encountered = false;
+            } 
             return path.toArray(new String[0]);
         }
         return null;
@@ -252,33 +256,32 @@ public class Graph {
      * @param neighborOrder 1 if alphabetical or -1 if reverse
      * @return the vertex at the end of the search
      */
-    private Vertex recursiveDFS(int fromIndex, int toIndex, int neighborOrder) { // =1 if alphabetical -1 if reverse
+    private void recursiveDFS(int fromIndex, int toIndex, int neighborOrder) {
         Vertex from = vertices.get(fromIndex);
         from.encountered = true; // mark from node as encountered
         if (fromIndex == toIndex) { // base case
-            return from;
+            //return from;
         }
-        if (from.edges.size() != 0) {
+        else if (from.edges.size() > 0) { // if there are edges for from
             ArrayList<String> neighbors = new ArrayList<>();
-            for (int i = 0; i < from.edges.size(); i++) { // traverse through the list of all edges
-                neighbors.add(vertices.get(from.edges.get(i).endNode).name); // add i-th edge's name
-            }
+            Iterator<Edge> it = from.edges.iterator();
+            while (it.hasNext()) // iterate through the list of all edges for the current vertex
+                neighbors.add(it.next().endNodeName); // add i-th edge's name
             neighbors.sort(String.CASE_INSENSITIVE_ORDER); // sort the neighbors alphabetically
             if (neighborOrder < 0)
                 neighbors = reverse(neighbors); // reverse alphabetical order if reverse order requested
             // call recursive methods
-            Vertex toVertex = null;
             for (int j = 0; j < neighbors.size(); j++) {
                 int newFromIndex = search(neighbors.get(j));
                 Vertex newFrom = vertices.get(newFromIndex);
                 if (newFrom.encountered == false) { // if not encountered yet
                     newFrom.parent = from;
-                    toVertex = recursiveDFS(newFromIndex, toIndex, neighborOrder);
+                    recursiveDFS(newFromIndex, toIndex, neighborOrder);
                 }
             }
         }
         // if from & to and edge not found, 
-        return null;
+        //return null;
     }
 
     /**
@@ -491,6 +494,10 @@ public class Graph {
         }
     }
 
+    /**
+     * Main method of this Graph class; test the printGraph() and other methods.
+     * @param args String arguments; not used in this main method.
+     */
     public static void main(String[] args) {
         Graph graph = new Graph();
 

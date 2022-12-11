@@ -28,6 +28,46 @@ public class WeightedGraph {
         return -1;
     }
 
+    /**
+     * Returns an array containing names of all vertices
+     * @return an array containing names of all vertices
+     */
+    public String[] getVertices() {
+        ArrayList<String> nameList = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++)
+            nameList.add(vertices.get(i).name);
+        return nameList.toArray(new String[0]);
+    }
+
+    /**
+     * Returns an array containing names of all neighbors of the vertex of the input index
+     * @param nodeIndex the index of the node to look for edges for
+     * @return an array containing names of all neighbors of the vertex of the input index
+     */
+    public String[] getEdges(int nodeIndex) {
+        ArrayList<String> nameList = new ArrayList<>();
+        LinkedList<Edge> edgeList = vertices.get(nodeIndex).edges;
+        Iterator<Edge> it = edgeList.iterator();
+        while (it.hasNext()) {
+            Edge edge = it.next();
+            nameList.add(it.next().endNodeName + ", " + edge.cost + ""); // add the name of the neighbors
+        }
+        return nameList.toArray(new String[0]);
+    }
+
+    /**
+     * Adds a node to the graph and checks for duplicates
+     * @param name name to reference the added node by
+     * @return true if successful and false otherwise
+     */
+    public boolean addNode(String name) {
+        if (search(name) == -1) { // if a node of the same name is not there already
+            vertices.add(new Vertex(name));
+            return true;
+        }
+        return false;
+    }
+
     /** Constructing weighted, directed graphs */
 
     /**
@@ -208,11 +248,64 @@ public class WeightedGraph {
 
     private class Edge {
         private int endNode;
+        private String endNodeName;
         private int cost;
 
         public Edge(int endNode, int cost) {
             this.endNode = endNode;
+            endNodeName = vertices.get(endNode).name;
             this.cost = cost;
         }
+    }
+
+    /**
+     * Main method of this WeightedGraph class; test the printWeightedGraph() and other methods.
+     * @param args String arguments; not used in this main method.
+     */
+    public static void main(String[] args) {
+        WeightedGraph graph = new WeightedGraph();
+
+        // Print out an empty graph
+        System.out.println("When using printWeightedGraph() on an empty graph, it doesn't print anything. The result:");
+        graph.printWeightedGraph();
+
+        // Print out a graph with nodes and no edges
+        System.out.println("\nWhen using printWeightedGraph() on a graph with nodes and no edges, it looks like this. The result:");
+        graph.addNode("apple");
+        graph.addNode("banana");
+        graph.addNode("cider");
+        graph.printWeightedGraph();
+
+        // Print out a graph with nodes and edges
+        System.out.println("\nWhen using printWeightedGraph() on a graph with nodes and edges, it looks like this. As you can see, it prints the graph in an adjacency list format. The result:");
+        graph.addWeightedEdge("apple", "banana", 2);
+        graph.addWeightedEdge("apple", "cider", 4);
+        graph.addWeightedEdge("banana", "cider", 5);
+        graph.addWeightedEdge("cider", "banana", 6);
+        graph.addWeightedEdge("cider", "apple", 1);
+        graph.printWeightedGraph();
+
+        // More complex graph example
+        System.out.println("\nMore complex graph example:");
+        WeightedGraph graph2 = new WeightedGraph();
+        graph2.addNode("A");
+        graph2.addNode("b");
+        graph2.addNode("C");
+        graph2.addNode("d");
+        graph2.addNode("E");
+        graph2.addWeightedEdge("A", "b", 2);
+        graph2.addWeightedEdge("A", "d", 4);
+        graph2.addWeightedEdge("A", "E", 3);
+        graph2.addWeightedEdge("b", "C", 5);
+        graph2.addWeightedEdge("b", "d", 1);
+        graph2.addWeightedEdge("C", "E", 6);
+        graph2.addWeightedEdge("C", "E", 8);
+        graph2.addWeightedEdge("d", "c", 3);
+        graph2.addWeightedEdge("d", "C", 5);
+        graph2.addWeightedEdge("d", "b", 1);
+        graph2.addWeightedEdge("E", "a", 6);
+        graph2.addWeightedEdge("E", "d", 0);
+        graph2.printWeightedGraph();
+        System.out.print("Notice how the neighbors are listed in alphabetical order.");
     }
 }
