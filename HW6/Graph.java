@@ -239,11 +239,7 @@ public class Graph {
     private String[] pathBuilder(Vertex fromVertex, Vertex toVertex) {
         LinkedList<String> path = new LinkedList<>(); // path b/w node from to node to
         Vertex trav = toVertex;
-        boolean encountered = false;
         while (trav != null) {
-            if (encountered && trav.equals(toVertex))
-                trav = null;
-            encountered = true;
             path.addFirst(trav.name);
             trav = trav.parent;
         }
@@ -454,7 +450,7 @@ public class Graph {
     /** 
      * Vertex class; a private, nested class of Graph class
      */
-    private class Vertex {
+    private class Vertex implements Comparable<Vertex> {
 
         /** stores the name of the vertex */
         private String name;
@@ -477,6 +473,21 @@ public class Graph {
             parent = null;
             encountered = false;
             cost = 0;
+        }
+        
+        /**
+         * A compareTo() method overriding the default compareTo() method for Vertex
+         * @param vertex vertex to be compared to this vertex
+         * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object
+         */
+        @Override
+        public int compareTo(Vertex vertex) {
+            if (this.cost < vertex.cost)
+                return -1;
+            else if (this.cost > vertex.cost)
+                return 1;
+            else 
+                return 0;
         }
     }
 

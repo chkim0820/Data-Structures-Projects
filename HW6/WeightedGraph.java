@@ -3,6 +3,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 
+import javafx.scene.layout.Priority;
+
 /**
  * WeightedGraph class that works for weighted and directed graphs; for CSDS233 HW 6
  * @author Chaehyeon Kim cxk445
@@ -151,6 +153,73 @@ public class WeightedGraph {
      * @return The shortest path from node from to node to. If there are multiple paths of equivalent length, only return one of them. If the path does not exist, return an empty array.
      */
     public String[] shortestPath(String from, String to) { // revise using priority queue
+        int fromIndex = search(from);
+        int toIndex = search(to);
+        if (fromIndex != -1 && toIndex != -1) {
+            // Initialize the heap and the path linked list
+            PriorityQueue<Vertex> heap = new PriorityQueue<>();
+            //LinkedList<String> path = new LinkedList<>();
+            // Add from vertex's neighbors to the heap
+            Iterator<Edge> it = vertices.get(fromIndex).edges.iterator();
+            //path.add(from);
+            vertices.get(fromIndex).encountered = true;
+            while (it.hasNext()) { // add all neighbors of the from vertex
+                Edge edge = it.next();
+                Vertex nextVertex = vertices.get(edge.endNode);
+                nextVertex.cost = edge.cost;
+                heap.add(nextVertex);
+                nextVertex.encountered = true;
+                nextVertex.parent = vertices.get(fromIndex);
+            }
+            // Iterate through the whole graph while heap is not null and heap's front does not equal to vertex
+            Vertex removed = heap.poll(); // just peeking; not deleting yet
+            boolean found = false;
+            if (fromIndex == toIndex) // if from & to identical, path "found"
+                found = true;
+            while (removed != null && !found) { // while the heap is not empty and to not found
+                //path.add(removed.name); // deleted the head
+                Iterator<Edge> itRemoved = removed.edges.iterator();
+                while (itRemoved.hasNext()) { // add all neighbors of the from vertex
+                    Edge edge = itRemoved.next();
+                    Vertex next = vertices.get(edge.endNode);
+                    if (next.encountered == false) {
+                        heap.add(next);
+                        next.cost = removed.cost + edge.cost;
+                        next.encountered = true;
+                        next.parent = removed;
+                    }
+                }
+                if (removed != null && removed.equals(vertices.get(toIndex)))
+                    found = true;
+                removed = heap.poll();
+            }
+            if (found)
+                return pathBuilder(vertices.get(fromIndex), vertices.get(toIndex));
+        }
+        return null;
+    }
+
+    /**
+     * A helper method that builds a String array of vertex names along the path if one found
+     * @param toVertex the end node of the path
+     * @return a String array of vertices along the path
+     */
+    private String[] pathBuilder(Vertex fromVertex, Vertex toVertex) {
+        LinkedList<String> path = new LinkedList<>(); // path b/w node from to node to
+        Vertex trav = toVertex;
+        while (trav != null) {
+            path.addFirst(trav.name);
+            trav = trav.parent;
+        }
+        // reset the values of the encountered field for all nodes
+        for (int i = 0; i < vertices.size(); i++) {
+            vertices.get(i).encountered = false;
+        }
+        return path.toArray(new String[0]);
+    }
+
+    /**
+     * public String[] shortestPath(String from, String to) { // revise using priority queue
         LinkedList<Vertex> finalized = new LinkedList<>(); // PriorityQueue containing all finalized vertices
         int fromIndex = search(from);
         int toIndex = search(to);
@@ -218,6 +287,7 @@ public class WeightedGraph {
         }
         return null;
     }
+     */
 
     /**
      * Helper method returning the smaller of the two inputs
@@ -246,7 +316,7 @@ public class WeightedGraph {
     /**
      * A private nested Vertex class
      */
-    private class Vertex {
+    private class Vertex implements Comparable<Vertex> {
 
         /** name of the vertex */
         private String name;
@@ -258,8 +328,6 @@ public class WeightedGraph {
         private int cost;
         /** the parent vertex of this vertex */
         private Vertex parent;
-        /** stores whether this vertex has been finalized in Dijkstra's algorithm */
-        private boolean finalized;
 
         /**
          * Constructor for Vertex class
@@ -271,7 +339,21 @@ public class WeightedGraph {
             encountered = false;
             cost = 0;
             parent = null;
-            finalized = false;
+        }
+
+        /**
+         * A compareTo() method overriding the default compareTo() method for Vertex
+         * @param vertex vertex to be compared to this vertex
+         * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object
+         */
+        @Override
+        public int compareTo(Vertex vertex) {
+            if (this.cost < vertex.cost)
+                return -1;
+            else if (this.cost > vertex.cost)
+                return 1;
+            else 
+                return 0;
         }
     }
 
