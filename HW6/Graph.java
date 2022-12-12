@@ -393,11 +393,8 @@ public class Graph {
     public String[] secondShortestPath(String from, String to) {
         int fromIndex = search(from);
         int toIndex = search(to);
-        if (fromIndex != -1 && toIndex != -1) { // if both from and to vertices exist
-            if (SSPHelper(fromIndex, toIndex)) {
-                return pathBuilder(vertices.get(fromIndex), vertices.get(toIndex));
-            }
-        }
+        if (fromIndex != -1 && toIndex != -1) // if both from and to vertices exist
+            return SSPHelper(from, to);
         return null;
     }
 
@@ -407,44 +404,33 @@ public class Graph {
      * @param toIndex the end vertex of the search
      * @return the vertex at the second shortest path
      */
-    private boolean SSPHelper(int fromIndex, int toIndex) {
-        GraphQueue queue = new GraphQueue();
-        boolean alrEncountered = false;
-        // add the first vertex
-        queue.add(vertices.get(fromIndex));
-        Vertex removed = queue.peek();
-        removed.encountered = true;
-        // loop through the graph
-        while (removed != null && !removed.equals(vertices.get(toIndex)) && !alrEncountered) { // or !=
-            removed = queue.remove();
-            // add all neighbors of removed
-            ArrayList<String> currentEdges = new ArrayList<>();
-            Iterator<Edge> it = removed.edges.iterator();
-            while (it.hasNext()) // add all edges to currentEdges list to sort alphabetically or reversely
-                currentEdges.add(vertices.get(it.next().endNode).name);
-            currentEdges.sort(String.CASE_INSENSITIVE_ORDER); // sort alphabetically
-            for (int j = 0; j < currentEdges.size(); j++) {
-                int nextIndex = search(currentEdges.get(j));
-                Vertex next = vertices.get(nextIndex);
-                if (next.encountered == true && nextIndex == toIndex) {
-                    alrEncountered = true;
-                    next.parent = removed;
-                    return true;
+    private String[] SSPHelper(String from, String to) {
+        String[] shortest = BFS(from, to, "alphabetical");
+        if (shortest != null && !from.equals(to)) {
+            boolean altered = false;
+            for (int i = 0; i < shortest.length - 1 && !altered; i++) {
+                Vertex v1 = vertices.get(search(shortest[i]));
+                Vertex v2 = vertices.get(search(shortest[i + 1]));
+                Iterator<Edge> it = v2.edges.iterator();
+                while (it.hasNext() && !altered) {
+                    Vertex next = vertices.get(it.next().endNode);
+                    if (!v1.name.equals(next.name) && !v2.name.equals(next.name)) {
+                        Iterator<Edge> it2 = next.edges.iterator();
+                        while (it2.hasNext() && !altered) {
+                            Vertex next2 = vertices.get(it2.next().endNode);
+                            if (next2.parent.name.equals(v1.name) && !(v2.name.equals(next.name))) {
+                                altered = true;
+                                v2.parent = next2;
+                            }
+                        }
+                    }
                 }
-                else if (next.encountered == false && nextIndex != toIndex) {
-                    queue.add(next);
-                    next.encountered = true;
-                    next.parent = removed;
-                }
-                else if (next.encountered == false && nextIndex == toIndex)
-                    next.encountered = true;
+                if (altered)
+                    i = shortest.length;
             }
-            removed = queue.peek();
+            return pathBuilder(vertices.get(search(from)), vertices.get(search(to)));
         }
-        if (removed != null) // if path found
-            return true;
-        else // if path not found
-            return false;
+        return null;
     }
 
     /** 
